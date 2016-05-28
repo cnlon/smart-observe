@@ -69,7 +69,6 @@ Observer.prototype.convert = function (key, val) {
   defineReactive(this.value, key, val)
 }
 
-
 /**
  * Attempt to create an observer instance for a value,
  * returns the new observer if successfully observed,

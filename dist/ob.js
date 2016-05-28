@@ -212,13 +212,23 @@ Dep.prototype.notify = function () {
 
 var arrayProto = Array.prototype;
 var arrayMethods = Object.create(arrayProto);
-var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
+var arrayMutating = ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'];
+
+/**
+ * Augment an target Array with arrayMethods
+ *
+ * @param {Array} arr
+ */
+
+function amend(arr) {
+  Object.setPrototypeOf(arr, arrayMethods);
+}
 
 /**
  * Intercept mutating methods and emit events
  */
 
-each(['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'], function (method) {
+each(arrayMutating, function (method) {
   // cache original method
   var original = arrayProto[method];
   def(arrayMethods, method, function mutator() {
@@ -259,12 +269,13 @@ each(['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'], function 
  * @return {*} - replaced element
  */
 
-def(arrayProto, '$set', function $set(index, val) {
+function $set(index, val) {
   if (index >= this.length) {
     this.length = Number(index) + 1;
   }
   return this.splice(index, 1, val)[0];
-});
+}
+def(arrayProto, '$set', $set);
 
 /**
  * Convenience method to remove the element at given index or target element reference.
@@ -272,39 +283,15 @@ def(arrayProto, '$set', function $set(index, val) {
  * @param {*} item
  */
 
-def(arrayProto, '$remove', function $remove(item) {
+function $remove(item) {
   /* istanbul ignore if */
   if (!this.length) return;
   var index = indexOf(this, item);
   if (index > -1) {
     return this.splice(index, 1);
   }
-});
-
-/**
- * Augment an target Object or Array by defining
- * hidden properties.
- *
- * @param {Object|Array} target
- * @param {Object} proto
- */
-
-function copyAugment(target, src, keys) {
-  each(keys, function (key) {
-    def(target, key, src[key]);
-  });
 }
-
-/**
- * Augment an target Object or Array
- *
- * @param {Object|Array} target
- */
-
-var augment = '__proto__' in {} ? Object.setPrototypeOf : copyAugment;
-function amend(target) {
-  augment(target, arrayMethods, arrayKeys);
-}
+def(arrayProto, '$remove', $remove);
 
 /**
  * Observer class that are attached to each observed
@@ -623,12 +610,12 @@ function Watcher(owner, getter, callback, options) {
   this.id = ++uid$1;
   this.active = true;
   // for lazy watchers
-  this.dirty = this.options.lazy;
+  this.dirty = options.lazy;
   this.deps = [];
   this.newDeps = [];
   this.depIds = Object.create(null);
   this.newDepIds = null;
-  this.value = this.options.lazy ? undefined : this.get();
+  this.value = options.lazy ? undefined : this.get();
 }
 
 /**
@@ -836,8 +823,6 @@ function makeComputed(owner, getter) {
   };
 }
 
-window.ob = ob; // Just for developing, remove in production
-
 var current = null;
 
 // {Function} One of carry, react, compute, watch. Default is watch.
@@ -922,7 +907,6 @@ function reactive(config) {
  *
  * @param {String} key
  * @param {Function} method
- * @param {Object} [bindTo] ///////////////// ?????????????????
  */
 
 function carry(key, method) {
@@ -949,8 +933,6 @@ function $carry(items) {
  *
  * @param {String} key
  * @param {*} val
- * @param {Object} [options]
- *                 - {Boolean} deep ///////////////// ?????????????????
  */
 
 function react(key, val) {
@@ -979,21 +961,23 @@ function $react(items) {
  *
  * @param {String} key
  * @param {Function|Object} accessor
- * @param {Object} [options]
- *                 - {Boolean} cache ///////////////// ?????????????????
+ *        - Function getter
+ *        - Object
+ *          - Function [get]  - getter
+ *          - Function [set]  - setter
+ * @param {Boolean} [cache]  - default is true
  */
 
-function compute(key, accessor, options) {
+function compute(key, accessor, cache) {
   var getter, setter;
   if (isFunc(accessor)) {
     getter = makeComputed(current, accessor);
     setter = noop;
   } else {
-    getter = accessor.get ? makeComputed(current, accessor.get) : noop;
+    getter = accessor.get ? cache !== false ? makeComputed(current, accessor.get) : accessor.get.bind(this) : noop;
     setter = accessor.set ? accessor.set.bind(this) : noop;
   }
   defi(current, key, getter, setter);
-  return ob;
 }
 
 /**
@@ -1022,7 +1006,7 @@ function $compute(items) {
  */
 
 function watch(exprOrFunc, callback, options) {
-  watch$1(current, exprOrFunc, callback, options || watch);
+  return watch$1(current, exprOrFunc, callback, options || watch);
 }
 
 /**
