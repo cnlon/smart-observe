@@ -2,7 +2,7 @@
   "name": "ob.js",
   "version": "0.1.1",
   "description": "ob.js comes from vue.js and is used to observe/watch Object/Array/Class",
-  "main": "lib/index.js",
+  "main": "lib/ob.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf lib && babel src --out-dir lib --presets es2015 --source-maps",
