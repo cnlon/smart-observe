@@ -55,4 +55,3 @@ window.onload = function () {
   d.e.$set(0, 3)
   console.dir(d)
 }
-
