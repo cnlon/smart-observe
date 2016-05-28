@@ -220,8 +220,8 @@ function traverse (val) {
 export function watch (owner, expOrFn, callback, options) {
   // parse expression for getter
   var getter = isFunc(expOrFn)
-    ? expOrFn
-    : parseExpression(expOrFn)
+               ? expOrFn
+               : parseExpression(expOrFn)
   var instance = new Watcher(owner, getter, callback, options)
   return instance
 }

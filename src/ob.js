@@ -14,8 +14,6 @@ import {
   isFunc,
 } from './utils'
 
-window.ob = ob // Just for developing, remove in production
-
 let current = null
 
  // {Function} One of carry, react, compute, watch. Default is watch.
@@ -100,7 +98,6 @@ function reactive (config) {
  *
  * @param {String} key
  * @param {Function} method
- * @param {Object} [bindTo] ///////////////// ?????????????????
  */
 
 function carry (key, method) {
@@ -127,8 +124,6 @@ function $carry (items) {
  *
  * @param {String} key
  * @param {*} val
- * @param {Object} [options]
- *                 - {Boolean} deep ///////////////// ?????????????????
  */
 
 function react (key, val) {
@@ -157,21 +152,27 @@ function $react (items) {
  *
  * @param {String} key
  * @param {Function|Object} accessor
- * @param {Object} [options]
- *                 - {Boolean} cache ///////////////// ?????????????????
+ *        - Function getter
+ *        - Object
+ *          - Function [get]  - getter
+ *          - Function [set]  - setter
+ * @param {Boolean} [cache]  - default is true
  */
 
-function compute (key, accessor, options) {
+function compute (key, accessor, cache) {
   var getter, setter
   if (isFunc(accessor)) {
     getter = makeComputed(current, accessor)
     setter = noop
   } else {
-    getter = accessor.get ? makeComputed(current, accessor.get) : noop
+    getter = accessor.get
+            ? cache !== false
+              ? makeComputed(current, accessor.get)
+              : accessor.get.bind(this)
+            : noop
     setter = accessor.set ? accessor.set.bind(this) : noop
   }
   defi(current, key, getter, setter)
-  return ob
 }
 
 /**
@@ -200,7 +201,7 @@ function $compute (items) {
  */
 
 function watch (exprOrFunc, callback, options) {
-  watche(current, exprOrFunc, callback, options || watch)
+  return watche(current, exprOrFunc, callback, options || watch)
 }
 
 /**
