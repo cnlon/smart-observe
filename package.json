@@ -1,6 +1,6 @@
 {
   "name": "ob.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ob.js comes from vue.js and is used to observe/watch Object/Array/Class",
   "main": "lib/index.js",
   "scripts": {

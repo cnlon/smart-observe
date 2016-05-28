@@ -1,3 +1,10 @@
+/**
+ * ob.js --- By longhao http://longhaohe.com
+ * Github: https://github.com/longhaohe/ob.js
+ * MIT Licensed.
+ */
+
+;(function(win) {
 'use strict';
 
 var babelHelpers = {};
@@ -1051,7 +1058,11 @@ module.exports = ob;
 } else if (typeof define === 'function' && define.amd) {
   define(ob)
 } else if (window) {
-  var key = window.ob ? 'ob.js' : 'ob'
-  window[key] = ob
+  var key = typeof win.ob === 'undefined'
+            ? 'ob'
+            : 'ob.js'
+  win[key] = ob
 }
+})(Function('return this')());
+
 //# sourceMappingURL=ob.js.map
