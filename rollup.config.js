@@ -18,6 +18,14 @@ export default {
   format: 'cjs',
   dest,
   plugins,
+  banner:
+`/**
+ * ob.js --- By longhao http://longhaohe.com
+ * Github: https://github.com/longhaohe/ob.js
+ * MIT Licensed.
+ */
+
+;(function(win) {`,
   outro:
 `
 if (typeof module !== 'undefined' && module.exports) {`,
@@ -26,7 +34,11 @@ if (typeof module !== 'undefined' && module.exports) {`,
 } else if (typeof define === 'function' && define.amd) {
   define(ob)
 } else if (window) {
-  var key = window.ob ? 'ob.js' : 'ob'
-  window[key] = ob
-}`,
+  var key = typeof win.ob === 'undefined'
+            ? 'ob'
+            : 'ob.js'
+  win[key] = ob
+}
+})(Function('return this')());
+`,
 }
