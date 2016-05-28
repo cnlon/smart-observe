@@ -3,9 +3,10 @@ import ob from 'ob.js'
 window.onload = function () {
   var option = {
     data: {
-      a: 2,
+      // a: 2,
       c: {
         c: 3,
+        d () {},
       },
       e: [1, 2, {v: 2}],
     },
@@ -13,14 +14,28 @@ window.onload = function () {
       b () {
         return this.a * 100
       },
-      d () {
-        return this.c.c * 100
+      d: {
+        get () {
+          return this.c.c * 100
+        },
+      },
+    },
+    watchers: {
+      'a': function (newValue, oldValue) {
+        this.innerWatch(newValue, oldValue)
+      },
+    },
+    methods: {
+      innerWatch (newValue, oldValue) {
+        log('watch prop yes!  ' + newValue + ',' + oldValue, 'inner')
       },
     },
   }
 
-  var d = window.d = {}
-  ob(d).config(option)
+  var d = window.d = {a: 2}
+  ob(d, 'a', function (newValue, oldValue) {
+    this.innerWatch(newValue, oldValue)
+  }).reactive(option)
 
   function log (msg, prefix) {
     document.getElementById('demo').innerHTML += `<p>${prefix}: ${msg}</p>`
@@ -38,12 +53,12 @@ window.onload = function () {
   }
   function test2 () {
     ob(d).watch('a', function (newValue, oldValue) {
-      log('watch prop yes!  ' + newValue + ',' + oldValue, 'test2')
+      log('watch prop yes!   ' + newValue + ',' + oldValue, 'test2')
     })
   }
   function test3 () {
     ob(d).watch('e[0]', function (newValue, oldValue) {
-      log('watch array yes!  ' + newValue + ',' + oldValue, 'test3')
+      log('watch array yes!   ' + newValue + ',' + oldValue, 'test3')
     })
   }
   test1()
@@ -53,4 +68,3 @@ window.onload = function () {
   d.e.$set(0, 3)
   console.dir(d)
 }
-
