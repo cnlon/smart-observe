@@ -4,7 +4,7 @@
  * MIT Licensed.
  */
 
-const ob = require('./ob.js')
+import ob from './ob.js'
 
 /* eslint-disable no-undef, no-new-func */
 ;(function (win) {

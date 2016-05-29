@@ -1,4 +1,4 @@
-import ob from 'ob.js'
+const ob = require('ob.js')
 
 window.onload = function () {
   var option = {

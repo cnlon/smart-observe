@@ -2,11 +2,10 @@
   "name": "ob.js",
   "version": "0.1.2",
   "description": "ob.js comes from vue.js and is used to observe/watch Object/Array/Class",
-  "main": "lib/ob.js",
+  "main": "dist/ob.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf lib && babel src --out-dir lib --presets es2015 --source-maps",
-    "dist": "npm run rollup && MIN=min npm run rollup",
+    "build": "npm run rollup && MIN=min npm run rollup",
     "rollup": "rollup --config --environment NODE_ENV:production --sourcemap",
     "lint": "eslint src/**",
     "dev": "webpack-dev-server --config dev/webpack.config.js --content-base dev/ --inline --hot --port 3031",
@@ -30,7 +29,6 @@
   "author": "longhaohe@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.9.0",
     "babel-core": "^6.9.0",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",

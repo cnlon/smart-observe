@@ -1,7 +1,7 @@
 import {
   observe,
   defineReactive,
-} from './observe.js'
+} from './observe'
 import {
   watch as watche,
   makeComputed,
