@@ -12,6 +12,10 @@
     "dev": "webpack-dev-server --config dev/webpack.config.js --content-base dev/ --inline --hot --port 3031",
     "demo": "cp dist/ob.min.js demo && webpack-dev-server --config demo/webpack.config.js --content-base demo/"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/longhaohe/ob.js.git"
+  },
   "keywords": [
     "ob.js",
     "ob",
