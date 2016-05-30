@@ -3,9 +3,9 @@
 [![Build Status](https://travis-ci.org/longhaohe/ob.js.svg?branch=master)](https://travis-ci.org/longhaohe/ob.js)
 [![npm version](https://badge.fury.io/js/ob.js.svg)](https://badge.fury.io/js/ob.js)
 
-ob.js comes from [vue.js](https://github.com/vuejs/vue) and is used to observe/watch Object/Array/Class.
+ob.js comes from [vue.js](https://github.com/vuejs/vue) and is a small and efficient library used to observe Object, Array and Class.
 
-ob.js 来自 [vue.js](https://github.com/vuejs/vue), 可以用来 观察、监测 对象、数组、类。
+ob.js 来自 [vue.js](https://github.com/vuejs/vue), 它小而高效，可以用来 观察 对象、数组和类。
 
 
 ## Installation
@@ -25,13 +25,12 @@ import ob from 'ob.js'
 ```
 Then
 
-#### Basal usage
+#### ob(obj, prop, callback)
 
 ``` javascript
 var obj = {
   a: 1,
 }
-// Default equal ob(obj).watch(prop, callback)
 ob(obj, 'a', function (newVal, oldVal) {
   console.log(newVal, oldVal) // 2 1
 })
@@ -44,7 +43,6 @@ obj.a = 2
 var obj = {
   a: 1,
 }
-// ob(obj) returns ob
 ob(obj).watch('a', function (newVal, oldVal) {
   console.log(newVal, oldVal) // 2 1
 })
@@ -58,7 +56,6 @@ var obj = {
   a: 1,
 }
 ob(obj).compute('b', function () {
-  // 'this' has bound to obj
   return this.a * 2
 }
 console.log(obj.b) // 2
@@ -102,7 +99,7 @@ obj.a = 3
 
 **ob.default**
 
-`Function`, is `ob.watch` default.
+`Function`, `ob.watch` default.
 
 Used for `ob(obj, prop, callback)`. You can set with `ob.compute`
 
@@ -161,7 +158,7 @@ or
 ob(obj).reactive(options)
 ```
 
-See above for example
+See [above](#obobjreactiveoptions) for example
 
 **ob.watch(prop, callback)**
 
@@ -170,7 +167,7 @@ See above for example
 | prop | `String`, required. |
 | callback | `Function`, required. |
 
-See above for example
+See [above](#obobjwatchprop-callback) for example
 
 **ob.compute(prop, accessor)**
 
@@ -192,7 +189,7 @@ if `accessor` is an `Object`, it should like:
 }
 ```
 
-See above for example
+See [above](#obobjcomputeprop-getter) for example
 
 ## Contributing
 
