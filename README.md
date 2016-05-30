@@ -1,6 +1,7 @@
 # ob.js
 
 [![Build Status](https://travis-ci.org/longhaohe/ob.js.svg?branch=master)](https://travis-ci.org/longhaohe/ob.js)
+[![npm version](https://badge.fury.io/js/ob.js.svg)](https://badge.fury.io/js/ob.js)
 
 ob.js comes from [vue.js](https://github.com/vuejs/vue) and is used to observe/watch Object/Array/Class.
 
