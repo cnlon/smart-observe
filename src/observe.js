@@ -84,13 +84,13 @@ export function observe (value) {
   }
   var ob
   if (
-    Object.prototype.hasOwnProperty.call(value, '__ob__') &&
-    value.__ob__ instanceof Observer
+    Object.prototype.hasOwnProperty.call(value, '__ob__')
+    && value.__ob__ instanceof Observer
   ) {
     ob = value.__ob__
   } else if (
-    (isArray(value) || isPlainObject(value)) &&
-    Object.isExtensible(value)
+    (isArray(value) || isPlainObject(value))
+    && Object.isExtensible(value)
   ) {
     ob = new Observer(value)
   }

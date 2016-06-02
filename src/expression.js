@@ -17,8 +17,9 @@ function makeGetterFn (body) {
     /* eslint-enable no-new-func */
   } catch (e) {
     warn(
-      'Invalid expression. ' +
-      'Generated function body: ' + body
+      'Invalid expression. '
+      + 'Generated function body: '
+      + body
     )
   }
 }

@@ -13,9 +13,10 @@ import ob from './ob.js'
   } else if (typeof define === 'function' && define.amd) {
     define(ob)
   } else if (win) {
-    var key = typeof win.ob === 'undefined'
-              ? 'ob'
-              : 'ob.js'
+    var key =
+      typeof win.ob === 'undefined'
+        ? 'ob'
+        : 'ob.js'
     win[key] = ob
   }
 })(Function('return this')())

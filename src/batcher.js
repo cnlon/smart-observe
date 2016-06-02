@@ -80,8 +80,8 @@ const nextTick = (function () {
     // webpack attempts to inject a shim for setImmediate
     // if it is used as a global, so we have to work around that to
     // avoid bundling unnecessary code.
-    const inBrowser = typeof window !== 'undefined' &&
-      Object.prototype.toString.call(window) !== '[object Object]'
+    const inBrowser = typeof window !== 'undefined'
+      && Object.prototype.toString.call(window) !== '[object Object]'
     const context = inBrowser
       ? window
       : typeof global !== 'undefined' ? global : {}

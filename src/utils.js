@@ -135,15 +135,16 @@ export function noop () {}
  */
 
 export const isDebug =
-  typeof process !== 'undefined' &&
-  process.env.NODE_ENV !== 'production'
+  typeof process !== 'undefined'
+  && process.env.NODE_ENV !== 'production'
 
 /**
  * warn
  */
 
 export const warn =
-  isDebug &&
-  console && isFunc(console.warn)
-  ? console.warn
-  : noop
+  isDebug
+  && console
+  && isFunc(console.warn)
+    ? console.warn
+    : noop
