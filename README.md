@@ -7,8 +7,6 @@
 
 ob.js comes from [vue.js](https://github.com/vuejs/vue) and is a small and efficient library used to observe Object, Array and Class.
 
-ob.js 来自 [vue.js](https://github.com/vuejs/vue), 它小而高效，可以用来 观察 对象、数组和类。
-
 
 ## Installation
 ``` bash
