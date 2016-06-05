@@ -16,10 +16,7 @@ npm install --save ob.js
 ## Usage
 
 First
-``` javascript
-var ob = require('ob.js')
-```
-or
+
 ``` javascript
 import ob from 'ob.js'
 ```
@@ -28,7 +25,7 @@ Then
 #### ob(obj, prop, callback)
 
 ``` javascript
-var obj = {
+const obj = {
   a: 1,
 }
 ob(obj, 'a', function (newVal, oldVal) {
@@ -40,7 +37,7 @@ obj.a = 2
 #### ob(obj).watch(prop, callback)
 
 ``` javascript
-var obj = {
+const obj = {
   a: 1,
 }
 ob(obj).watch('a', function (newVal, oldVal) {
@@ -52,7 +49,7 @@ obj.a = 2
 #### ob(obj).compute(prop, getter)
 
 ``` javascript
-var obj = {
+const obj = {
   a: 1,
 }
 ob(obj).compute('b', function () {
@@ -66,10 +63,10 @@ console.log(obj.b) // 6
 #### ob(obj).reactive(options)
 
 ``` javascript
-var obj = {
+const obj = {
   a: 1,
 }
-var options = {
+const options = {
   data: {
     b: 2,
   },
