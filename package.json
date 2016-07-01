@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/longhaohe/ob.js.git"
+    "url": "git+https://github.com/lon3/ob.js.git"
   },
   "keywords": [
     "ob.js",
@@ -44,5 +44,9 @@
     "rollup-plugin-uglify": "^0.3.1",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/lon3/ob.js/issues"
+  },
+  "homepage": "https://github.com/lon3/ob.js#readme"
 }
