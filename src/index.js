@@ -1,6 +1,6 @@
 /**
  * ob.js --- By longhao http://longhaohe.com
- * Github: https://github.com/longhaohe/ob.js
+ * Github: https://github.com/lon3/ob.js
  * MIT Licensed.
  */
 

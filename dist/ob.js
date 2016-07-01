@@ -1,19 +1,17 @@
 /**
  * ob.js --- By longhao http://longhaohe.com
- * Github: https://github.com/longhaohe/ob.js
+ * Github: https://github.com/lon3/ob.js
  * MIT Licensed.
  */
 
 ;(function(win) {
 'use strict';
 
-var babelHelpers = {};
-babelHelpers.typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
 } : function (obj) {
   return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
 };
-babelHelpers;
 
 /**
  * Define a property.
@@ -100,7 +98,7 @@ function indexOf(arr, obj) {
  */
 
 function isObject(obj) {
-  return obj !== null && (typeof obj === 'undefined' ? 'undefined' : babelHelpers.typeof(obj)) === 'object';
+  return obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
 }
 
 /**
@@ -372,7 +370,7 @@ Observer.prototype.convert = function (key, val) {
  */
 
 function observe(value) {
-  if (!value || (typeof value === 'undefined' ? 'undefined' : babelHelpers.typeof(value)) !== 'object') {
+  if (!value || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) !== 'object') {
     return;
   }
   var ob;
@@ -709,10 +707,10 @@ Watcher.prototype.update = function () {
 Watcher.prototype.run = function () {
   if (this.active) {
     var value = this.get();
-    if (value !== this.value ||
+    if (value !== this.value
     // Deep watchers and watchers on Object/Arrays should fire even when
     // the value is the same, because the value may have mutated;
-    isObject(value) || this.options.deep) {
+    || isObject(value) || this.options.deep) {
       // set new value
       var oldValue = this.value;
       this.value = value;
