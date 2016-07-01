@@ -15,7 +15,9 @@ if (needMin) {
 
 export default {
   entry: 'src/ob.js',
-  format: 'cjs',
+  format: 'umd',
+  moduleId: 'ob',
+  moduleName: 'ob',
   dest,
   plugins,
   banner:
@@ -23,22 +25,5 @@ export default {
  * ob.js --- By longhao http://longhaohe.com
  * Github: https://github.com/lon3/ob.js
  * MIT Licensed.
- */
-
-;(function(win) {`,
-  outro:
-`
-if (typeof module !== 'undefined' && module.exports) {`,
-  footer:
-`
-} else if (typeof define === 'function' && define.amd) {
-  define(ob)
-} else if (window) {
-  var key = typeof win.ob === 'undefined'
-            ? 'ob'
-            : 'ob.js'
-  win[key] = ob
-}
-})(Function('return this')());
-`,
+ */`,
 }
