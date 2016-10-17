@@ -5,205 +5,126 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 
-ob.js comes from [vue.js](https://github.com/vuejs/vue) and is a small and efficient library used to observe Object, Array and Class.
+**ob.js** 来自 [**vue.js**](https://github.com/vuejs/vue)，是一个小巧、高效，用于监测 javascript 对象、数组、类 变化的库
 
-
-## Installation
+## 安装
 ``` bash
 npm install --save ob.js
 ```
 
-## Usage
+## 使用
 
-First
+#### 监测属性 `ob.watch(target, expression, callback)`
 
 ``` javascript
 import ob from 'ob.js'
-```
-Then
 
-#### ob(obj, prop, callback)
-
-``` javascript
-const obj = {
-  a: 1,
-}
-ob(obj, 'a', function (newVal, oldVal) {
-  console.log(newVal, oldVal) // 2 1
-})
-obj.a = 2
+const target = {a: 1}
+ob.watch(target, 'a', (newValue, oldValue) => console.log(`a: ${newValue}`))
+target.a = 2
+// a: 2
 ```
 
-#### ob(obj).watch(prop, callback)
+#### 添加计算属性 `ob.compute(target, name, getter)`
 
 ``` javascript
-const obj = {
-  a: 1,
+import ob from 'ob.js'
+
+class Claz {
+  constructor () {
+    this.a = 1
+    ob.compute(this, 'b', () => this.double(this.a))
+  }
+  double (num) {
+    return num * 2
+  }
 }
-ob(obj).watch('a', function (newVal, oldVal) {
-  console.log(newVal, oldVal) // 2 1
-})
-obj.a = 2
+const target = new Claz()
+console.log(`b: ${target.b}`)
+// b: 2
+target.a = 3
+console.log(`b: ${target.b}`)
+// b: 6
 ```
 
-#### ob(obj).compute(prop, getter)
+#### 监测属性并添加计算属性 `ob.react(options)`
 
 ``` javascript
-const obj = {
-  a: 1,
-}
-ob(obj).compute('b', function () {
-  return this.a * 2
-}
-console.log(obj.b) // 2
-obj.a = 3
-console.log(obj.b) // 6
-```
+import ob from 'ob.js'
 
-#### ob(obj).reactive(options)
-
-``` javascript
-const obj = {
-  a: 1,
-}
 const options = {
   data: {
-    b: 2,
+    PI: Math.PI,
+    radii: 1,
   },
   computed: {
-    'c': function () {
-      return this.square(this.a) + this.square(this.b)
+    'area': function () {
+      return this.PI * this.square(this.b) // πr²
     },
   },
   watchers: {
-    'c': function (newVal, oldVal) {
-      console.log(newVal, oldVal) // 13 5
+    'area': function (newValue, oldValue) {
+      console.log(`area: ${newValue}`)
     },
   },
   methods: {
-    square: function (num) {
+    square (num) {
       return num * num
-    }
+    },
   },
 }
-ob(obj).reactive(options)
-obj.a = 3
+const target = ob.react(options)
+target.a = 3
+// area: 28.274333882308138
 ```
 
 ## API
 
-#### properties
+#### 属性
 
-**ob.default**
+| 名称 | 类型 | 值 | 说明 |
+| --- | --- | --- | --- |
+| `ob.deep` | `Boolean` | 默认为 `false` | 如果为 `true`，`ob.watch(target, expression, callback)` 将会对 `target` 深度监测 |
+| `ob.sync` | `Boolean` | 默认为 `false` | 如果为 `true`，`ob.watch(target, expression, callback)` 监测到属性变化时，立即调用回调函数 |
+| `ob.default` | `Function` | 只能为 `ob.react`，`ob.watch` 或 `ob.compute`， 默认为 `ob.watch` | 设置 `ob(...)` 实际调用的方法，写起来简洁一些 |
 
-`Function`, `ob.watch` default.
+#### 方法
 
-Used for `ob(obj, prop, callback)`. You can set with `ob.compute`
+`ob.watch(target, expression, callback)`
 
-**ob.reative.auto**
+- `target`: 任意对象
+- `expression`: `String` 或 `Function`
+- `callback`: `Function`
+- 返回 `Watcher`，调用 `watcher.teardown()` 可以取消监测
 
-`Boolean`, `true` default.
+`ob.compute(target, name, accessor, cache)`
 
-Used for `ob(obj, prop, callback)`. If `true`, it will be called with `obj`.
+- `target`: 任意对象
+- `name`: `String`
+- `accessor`:
+  - `Function`: 会作为 `getter`，等同传入 {get: accessor}
+  - `Object`: 可以包含：(其中，至少包含 `get` 或 `set`)
+    - `get`: `Function`
+    - `set`: `Function`
+    - `cache`: `Boolean`，可选，默认为 `true`，如果设为 `false`，每次读取计算属性都要重新计算
+- `cache`: `Boolean`，可选，默认为 `true`，仅当 `accessor` 为 `Function` 时有效。
 
-**ob.watch.deep**
+`ob.react(options, target)`
 
-`Boolean`, `false` default.
+- `options`: `Object`，要配置的参数集合，可以包含:
+  - `data`: 要附加的字段
+  - `computed`: 要附加的计算属性
+  - `watchers`: 要监测的属性和计算属性
+  - `methods`: 要附加的方法，这些方法将会自动绑定 `target`
+- `target`: 任意对象，可选，默认为空对象，`options` 的参数将附加到此对象上
+- 返回 `target`
 
-Used for `ob.watch(prop, callback)`.
+#### `ob(...)`
 
-**ob.watch.sync**
-
-`Boolean`, `false` default.
-
-Used for `ob.watch(prop, callback)`. If `true`, call `callback` immediately not by batcher after `obj.prop` changed.
-
-#### methods
-
-**ob(obj, prop, callback)**
-
-| param | type |
-| --- | --- |
-| obj | `Object`, required. |
-| prop | `String`, optional |
-| callback | `Function`, optional |
-
-What is `ob(...)`  doing?
-
-1. Set `current` with `obj`
-2. If `obj` has not been initiated, init it. And then call `ob.reative()` if `ob.reative.auto` is `true`.
-3. Call `ob.default` with prop and callback, if existing.
-
-**ob.reactive(options)**
-
-| param | type |
-| --- | --- |
-| options | `Object`, required. |
-
-Before calling `ob.reactive`, you should tell it who is `current` by:
-
-``` javascript
-// var obj = {...}, options = {...}
-ob(obj)
-ob.reactive(options)
-```
-
-or
-
-``` javascript
-// var obj = {...}, options = {...}
-ob(obj).reactive(options)
-```
-
-See [above](#obobjreactiveoptions) for example
-
-**ob.watch(prop, callback)**
-
-| param | type |
-| --- | --- |
-| prop | `String`, required. |
-| callback | `Function`, required. |
-
-See [above](#obobjwatchprop-callback) for example
-
-**ob.compute(prop, accessor)**
-
-| param | type |
-| --- | --- |
-| prop | `String`, required. |
-| accessor | `Function`\|`Object`, required. |
-
-if `accessor` is an `Object`, it should like:
-
-``` javascript
-{
-  get: function () {
-    // return something
-  },
-  set: function (val) { // optional
-    // do something
-  }
-}
-```
-
-See [above](#obobjcomputeprop-getter) for example
-
-## Contributing
-
-Thanks so much for wanting to help! I really appreciate it.
-
-- Have an idea for a new feature?
-- Want to add a new built-in theme?
-
-Excellent! You've come to the right place.
-
-1. If you find a bug or wish to suggest a new feature, please create an issue first
-2. Make sure your code conventions are in-line with the project's style
-3. Make your commits and PRs as tiny as possible - one feature or bugfix at a time
-4. Write detailed commit messages, in-line with the project's commit naming conventions
+  为方法 `ob.default` 的语法糖，`ob.default` 参见属性
 
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
 
-Copyright (c) 2016 longhao
+Copyright (c) 2016 lon

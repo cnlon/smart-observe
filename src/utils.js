@@ -1,15 +1,17 @@
+import {IS_DEBUG} from './constants'
+
 /**
- * Define a property.
+ * Define property with value.
  *
- * @param {Object} obj
- * @param {String} key
- * @param {*} val
+ * @param {Object} object
+ * @param {String} property
+ * @param {*} value
  * @param {Boolean} [enumerable]
  */
 
-export function def (obj, key, val, enumerable) {
-  Object.defineProperty(obj, key, {
-    value: val,
+export function def (object, property, value, enumerable) {
+  Object.defineProperty(object, property, {
+    value,
     enumerable: !!enumerable,
     writable: true,
     configurable: true,
@@ -17,16 +19,16 @@ export function def (obj, key, val, enumerable) {
 }
 
 /**
- * Define a property.
+ * Define property with getter and setter.
  *
- * @param {Object} obj
- * @param {String} key
+ * @param {Object} object
+ * @param {String} property
  * @param {Function} getter
  * @param {Function} setter
  */
 
-export function defi (obj, key, getter, setter) {
-  Object.defineProperty(obj, key, {
+export function defi (object, property, getter, setter) {
+  Object.defineProperty(object, property, {
     get: getter,
     set: setter,
     configurable: true,
@@ -37,7 +39,6 @@ export function defi (obj, key, getter, setter) {
 /**
  * Array type check.
  *
- * @param {*} obj
  * @return {Boolean}
  */
 
@@ -47,30 +48,14 @@ export const isArray = Array.isArray
  * Strict object type check. Only returns true
  * for plain JavaScript objects.
  *
- * @param {*} obj
+ * @param {*} object
  * @return {Boolean}
  */
 
-var toString = Object.prototype.toString
-var OBJECT_STRING = '[object Object]'
-export function isPlainObject (obj) {
-  return toString.call(obj) === OBJECT_STRING
-}
-
-/**
- * Manual indexOf because it's slightly faster than
- * native.
- *
- * @param {Array} arr
- * @param {*} obj
- */
-
-export function indexOf (arr, obj) {
-  var i = arr.length
-  while (i--) {
-    if (arr[i] === obj) return i
-  }
-  return -1
+const toString = Object.prototype.toString
+const OBJECT_STRING = '[object Object]'
+export function isPlainObject (object) {
+  return toString.call(object) === OBJECT_STRING
 }
 
 /**
@@ -78,50 +63,37 @@ export function indexOf (arr, obj) {
  * Objects from primitive values when we know the value
  * is a JSON-compliant type.
  *
- * @param {*} obj
+ * @param {*} object
  * @return {Boolean}
  */
 
-export function isObject (obj) {
-  return obj !== null && typeof obj === 'object'
+export function isObject (object) {
+  return object !== null && typeof object === 'object'
 }
 
 /**
- * every
+ * Function type check
  *
- * @param {Object} obj
- * @param {Function} cb
- */
-
-export function every (obj, cb) {
-  var keys = Object.keys(obj)
-  for (var i = 0, l = keys.length; i < l; i++) {
-    cb(keys[i], obj[keys[i]])
-  }
-}
-
-/**
- * each
- *
- * @param {Array} arr
- * @param {Function} cb
- */
-
-export function each (arr, cb) {
-  for (var i = 0, l = arr.length; i < l; i++) {
-    cb(arr[i], i)
-  }
-}
-
-/**
- * isFunc
- *
- * @param {*} func
+ * @param {*} fun
  * @param {Boolean}
  */
 
-export function isFunc (func) {
-  return typeof func === 'function'
+export function isFunction (fun) {
+  return typeof fun === 'function'
+}
+
+/**
+ * Iterate object
+ *
+ * @param {Object} object
+ * @param {Function} cb
+ */
+
+export function every (object, callback) {
+  const keys = Object.keys(object)
+  for (let i = 0, l = keys.length; i < l; i++) {
+    callback(keys[i], object[keys[i]])
+  }
 }
 
 /**
@@ -131,20 +103,12 @@ export function isFunc (func) {
 export function noop () {}
 
 /**
- * isDebug
- */
-
-export const isDebug =
-  typeof process !== 'undefined'
-  && process.env.NODE_ENV !== 'production'
-
-/**
- * warn
+ * @param {String} string
  */
 
 export const warn =
-  isDebug
+  IS_DEBUG
   && console
-  && isFunc(console.warn)
+  && isFunction(console.warn)
     ? console.warn
     : noop

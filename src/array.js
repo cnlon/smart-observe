@@ -1,12 +1,9 @@
-import {
-  def,
-  each,
-  indexOf,
-} from './utils'
+import {def} from './utils'
+import {OB_NAME} from './constants'
 
-const arrayProto = Array.prototype
-const arrayMethods = Object.create(arrayProto)
-const arrayMutating = [
+const arrayPrototype = Array.prototype
+const arrayMethods = Object.create(arrayPrototype)
+const arrayMutativeMethods = [
   'push',
   'pop',
   'shift',
@@ -19,31 +16,28 @@ const arrayMutating = [
 /**
  * Augment an target Array with arrayMethods
  *
- * @param {Array} arr
+ * @param {Array} array
  */
 
-export default function amend (arr) {
-  Object.setPrototypeOf(arr, arrayMethods)
+export default function amend (array) {
+  Object.setPrototypeOf(array, arrayMethods)
 }
 
 /**
  * Intercept mutating methods and emit events
  */
 
-each(arrayMutating, function (method) {
+for (
+  let i = 0, l = arrayMutativeMethods.length, method;
+  i < l;
+  method = arrayMutativeMethods[++i]
+) {
   // cache original method
-  var original = arrayProto[method]
-  def(arrayMethods, method, function mutator () {
-    // avoid leaking arguments:
-    // http://jsperf.com/closure-with-arguments
-    var i = arguments.length
-    var args = new Array(i)
-    while (i--) {
-      args[i] = arguments[i]
-    }
-    var result = original.apply(this, args)
-    var ob = this.__ob__
-    var inserted
+  const original = arrayPrototype[method]
+  def(arrayMethods, method, function mutator (...args) {
+    const result = original.apply(this, args)
+    const ob = this[OB_NAME]
+    let inserted
     switch (method) {
       case 'push':
         inserted = args
@@ -56,31 +50,31 @@ each(arrayMutating, function (method) {
         break
     }
     if (inserted) ob.observeArray(inserted)
-    // notify change
-    ob.dep.notify()
+    ob.dep.notify()  // notify change
     return result
   })
-})
+}
 
 /**
  * Swap the element at the given index with a new value
  * and emits corresponding event.
  *
  * @param {Number} index
- * @param {*} val
+ * @param {*} value
  * @return {*} - replaced element
  */
 
-function $set (index, val) {
+function $set (index, value) {
   if (index >= this.length) {
     this.length = Number(index) + 1
   }
-  return this.splice(index, 1, val)[0]
+  return this.splice(index, 1, value)[0]
 }
-def(arrayProto, '$set', $set)
+def(arrayPrototype, '$set', $set)
 
 /**
- * Convenience method to remove the element at given index or target element reference.
+ * Convenience method to remove the element at given index
+ * or target element reference.
  *
  * @param {*} item
  */
@@ -88,9 +82,9 @@ def(arrayProto, '$set', $set)
 function $remove (item) {
   /* istanbul ignore if */
   if (!this.length) return
-  var index = indexOf(this, item)
+  const index = this.indexOf(item)
   if (index > -1) {
     return this.splice(index, 1)
   }
 }
-def(arrayProto, '$remove', $remove)
+def(arrayPrototype, '$remove', $remove)

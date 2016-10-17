@@ -5,7 +5,8 @@ const needMin = !!process.env.MIN
 var dest = 'dist/ob.js'
 var plugins = [
   babel({
-    presets: [ 'es2015-rollup' ],
+    presets: ['es2015-rollup'],
+    plugins: ['transform-class-properties'],
   }),
 ]
 if (needMin) {
@@ -22,7 +23,7 @@ export default {
   plugins,
   banner:
 `/**
- * ob.js --- By longhao http://longhaohe.com
+ * ob.js --- By lon
  * Github: https://github.com/lon3/ob.js
  * MIT Licensed.
  */`,

@@ -11,14 +11,15 @@ var config = {
   module: {
     loaders: [
       {
-        test: /\.js?$/,
+        test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel',
       },
     ],
   },
   babel: {
-    presets: [ 'es2015' ],
+    presets: ['es2015'],
+    plugins: ['transform-class-properties'],
   },
   devtool: 'eval',
   resolve: {

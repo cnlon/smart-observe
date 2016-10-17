@@ -33,9 +33,7 @@ window.onload = function () {
   }
 
   var d = window.d = {a: 2}
-  ob(d, 'a', function (newValue, oldValue) {
-    this.innerWatch(newValue, oldValue)
-  }).reactive(option)
+  ob(d, option)
 
   function log (msg, prefix) {
     document.getElementById('demo').innerHTML += `<p>${prefix}: ${msg}</p>`
@@ -52,12 +50,12 @@ window.onload = function () {
     }
   }
   function test2 () {
-    ob(d).watch('a', function (newValue, oldValue) {
+    ob.watch(d, 'a', function (newValue, oldValue) {
       log('watch prop yes!   ' + newValue + ',' + oldValue, 'test2')
     })
   }
   function test3 () {
-    ob(d).watch('e[0]', function (newValue, oldValue) {
+    ob.watch(d, 'e[0]', function (newValue, oldValue) {
       log('watch array yes!   ' + newValue + ',' + oldValue, 'test3')
     })
   }

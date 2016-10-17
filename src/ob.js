@@ -9,232 +9,212 @@ import {
 import {
   def,
   defi,
-  every,
   noop,
-  isFunc,
+  isFunction,
+  every,
 } from './utils'
+import {
+  WATCHERS_PROPERTY_NAME,
+  DATA_PROPTERTY_NAME,
+} from './constants'
 
-let current = null
+// Only could be react, compute or watch
+ob.default = react
+ob.deep = ob.lazy = ob.sync = false
 
- // {Function} One of carry, react, compute, watch. Default is watch.
-ob.default = watch
-
-// {Boolean} Default is true
-reactive.auto = true
-
-// {Boolean} Default is false
-watch.deep = watch.lazy = watch.sync = false
-
-Object.setPrototypeOf(ob, {
-  reactive,
-  carry, $carry,
-  react, $react,
-  compute, $compute,
-  watch, $watch,
-})
+Object.setPrototypeOf(ob, {react, compute, watch})
 
 /**
  * ob
  *
- * @param {Object} owner
- * @param {*} [expr]
- * @param {*} [func]
- * @param {*} [opt]
+ * @public
+ * @param {Object} target
+ * @param {*} [expression]
+ * @param {*} [fun]
+ * @param {*} [options]
  * @return {Function} ob
  */
 
-export default function ob (owner, expr, func, opt) {
-  current = owner
-  var isOber = owner.hasOwnProperty('_watchers')
-  if (!isOber) {
-    init(owner)
-    if (reactive.auto) {
-      reactive()
+export default function ob (target, expression, fun, options) {
+  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
+    init(target)
+  }
+  return ob.default(target, expression, fun, options)
+}
+
+/**
+ * React options
+ *
+ * @public
+ * @param {Object} options
+ * @param {Object} [target]
+ * @return {Function} ob
+ */
+
+function react (options, target) {
+  if (target) {
+    if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
+      init(target)
     }
-  }
-  if (expr) {
-    ob.default(expr, func, opt)
-  }
-  return ob
-}
-
-/**
- * init
- *
- * @param {Object} owner
- * @return {Function} ob
- */
-
-function init (owner) {
-  def(owner, '_watchers', [], false)
-  def(owner, '_data', Object.create(null), false)
-  observe(owner._data)
-  return ob
-}
-
-/**
- * reactive
- *
- * @param {Object} config
- * @return {Function} ob
- */
-
-function reactive (config) {
-  if (config) {
-    config.methods && $carry(config.methods)
-    config.data && $react(config.data)
-    config.computed && $compute(config.computed)
-    config.watchers && $watch(config.watchers)
   } else {
-    every(current, function (key, val) {
-      !isFunc(val) && react(key, val)
-    })
+    target = Object.create(null)
   }
-  return ob
+  options.methods && carryMethods(target, options.methods)
+  options.data && reactProperties(target, options.data)
+  options.computed && computeProperties(target, options.computed)
+  options.watchers && watchProperties(target, options.watchers)
+  return target
 }
 
 /**
- * carry
+ * Compute property
  *
- * @param {String} key
- * @param {Function} method
- */
-
-function carry (key, method) {
-  current[key] = method.bind(current)
-  return ob
-}
-
-/**
- * $carry
- *
- * @param {Object} items
- * @return {Function} ob
- */
-
-function $carry (items) {
-  every(items, function (key, val) {
-    carry(key, val)
-  })
-  return ob
-}
-
-/**
- * react
- *
- * @param {String} key
- * @param {*} val
- */
-
-function react (key, val) {
-  current._data[key] = val
-  defineReactive(current._data, key, val)
-  proxy(current, key)
-  return ob
-}
-
-/**
- * $react
- *
- * @param {Object} items
- * @return {Function} ob
- */
-
-function $react (items) {
-  every(items, function (key, val) {
-    react(key, val)
-  })
-  return ob
-}
-
-/**
- * compute
- *
- * @param {String} key
- * @param {Function|Object} accessor
+ * @public
+ * @param {Object} target
+ * @param {String} name
+ * @param {Function|Object} getterOrAccessor
  *        - Function getter
- *        - Object
+ *        - Object accessor
  *          - Function [get]  - getter
  *          - Function [set]  - setter
- * @param {Boolean} [cache]  - default is true
+ * @param {Boolean} [cache]
  */
 
-function compute (key, accessor, cache) {
-  var getter, setter
-  if (isFunc(accessor)) {
-    getter = makeComputed(current, accessor)
+function compute (target, name, getterOrAccessor, cache) {
+  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
+    init(target)
+  }
+  let getter, setter
+  if (isFunction(getterOrAccessor)) {
+    getter = makeComputed(target, getterOrAccessor)
     setter = noop
   } else {
-    getter = accessor.get
+    getter = getterOrAccessor.get
             ? cache !== false
-              ? makeComputed(current, accessor.get)
-              : accessor.get.bind(this)
+              ? makeComputed(target, getterOrAccessor.get)
+              : getterOrAccessor.get.bind(this)
             : noop
-    setter = accessor.set ? accessor.set.bind(this) : noop
+    setter = getterOrAccessor.set ? getterOrAccessor.set.bind(this) : noop
   }
-  defi(current, key, getter, setter)
+  defi(target, name, getter, setter)
 }
 
 /**
- * $compute
+ * Watch property
  *
- * @param {Object} items
- * @return {Function} ob
- */
-
-function $compute (items) {
-  every(items, function (key, val) {
-    compute(key, val)
-  })
-  return ob
-}
-
-/**
- * watch
- *
- * @param {String|Function} exprOrFunc
+ * @public
+ * @param {Object} target
+ * @param {String|Function} expressionOrFunction
  * @param {Function} callback
  * @param {Object} [options]
  *                 - {Boolean} deep
  *                 - {Boolean} sync
  *                 - {Boolean} lazy
+ * @return {Watcher}
  */
 
-function watch (exprOrFunc, callback, options) {
-  return watche(current, exprOrFunc, callback, options || watch)
+function watch (target, expressionOrFunction, callback, options = ob) {
+  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
+    init(target)
+  }
+  return watche(target, expressionOrFunction, callback, options)
 }
 
 /**
- * $watch
- *
- * @param {Object} items
- * @return {Function} ob
+ * @private
+ * @param {Object} target
  */
 
-function $watch (items) {
-  every(items, function (expr, fnOrOpt) {
-    if (isFunc(fnOrOpt)) {
-      watch(expr, fnOrOpt)
+function init (target) {
+  def(target, WATCHERS_PROPERTY_NAME, [], false)
+  def(target, DATA_PROPTERTY_NAME, Object.create(null), false)
+  observe(target[DATA_PROPTERTY_NAME])
+  reactSelfProperties(target)
+}
+
+/**
+ * @private
+ * @param {Object} target
+ * @param {Object} methods
+ */
+
+function carryMethods (target, methods) {
+  every(methods, (name, method) => {
+    target[name] = method.bind(target)
+  })
+}
+
+/**
+ * @private
+ * @param {Object} target
+ * @param {String} key
+ * @param {*} value
+ */
+function reactProperty (target, key, value) {
+  target[DATA_PROPTERTY_NAME][key] = value
+  defineReactive(target[DATA_PROPTERTY_NAME], key, value)
+  proxy(target, key)
+}
+
+/**
+ * @private
+ * @param {Object} target
+ * @param {Object} properties
+ */
+
+function reactProperties (target, properties) {
+  every(properties, (key, value) => reactProperty(target, key, value))
+}
+
+/**
+ * @private
+ * @param {Object} target
+ */
+
+function reactSelfProperties (target) {
+  every(target, (key, value) => {
+    !isFunction(value) && reactProperty(target, key, value)
+  })
+}
+
+/**
+ * @private
+ * @param {Object} target
+ * @param {Object} properties
+ */
+
+function computeProperties (target, properties) {
+  every(properties, (key, value) => compute(target, key, value))
+}
+
+/**
+ * @private
+ * @param {Object} target
+ * @param {Object} properties
+ */
+
+function watchProperties (target, properties) {
+  every(properties, (expression, functionOrOption) => {
+    if (isFunction(functionOrOption)) {
+      watch(target, expression, functionOrOption)
     } else {
-      watch(expr, fnOrOpt.watcher, fnOrOpt)
+      watch(target, expression, functionOrOption.watcher, functionOrOption)
     }
   })
-  return ob
 }
 
 /**
- * proxy
- *
- * @param {Object} owner
+ * @private
+ * @param {Object} target
  * @param {String} key
  */
 
-function proxy (owner, key) {
+function proxy (target, key) {
   function getter () {
-    return owner._data[key]
+    return target[DATA_PROPTERTY_NAME][key]
   }
-  function setter (val) {
-    owner._data[key] = val
+  function setter (value) {
+    target[DATA_PROPTERTY_NAME][key] = value
   }
-  defi(owner, key, getter, setter)
+  defi(target, key, getter, setter)
 }

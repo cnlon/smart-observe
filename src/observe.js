@@ -3,11 +3,11 @@ import amendArray from './array'
 import {
   def,
   defi,
-  every,
-  each,
   isArray,
   isPlainObject,
+  every,
 } from './utils'
+import {OB_NAME} from './constants'
 
 /**
  * Observer class that are attached to each observed
@@ -22,7 +22,7 @@ import {
 function Observer (value) {
   this.value = value
   this.dep = new Dep()
-  def(value, '__ob__', this)
+  def(value, OB_NAME, this)
   if (isArray(value)) {
     amendArray(value)
     this.observeArray(value)
@@ -36,13 +36,11 @@ function Observer (value) {
  * getter/setters. This method should only be called when
  * value type is Object.
  *
- * @param {Object} obj
+ * @param {Object} object
  */
 
-Observer.prototype.walk = function (obj) {
-  every(obj, (key, val) => {
-    this.convert(key, val)
-  })
+Observer.prototype.walk = function (object) {
+  every(object, (key, value) => this.convert(key, value))
 }
 
 /**
@@ -52,9 +50,9 @@ Observer.prototype.walk = function (obj) {
  */
 
 Observer.prototype.observeArray = function (items) {
-  each(items, function (val) {
-    observe(val)
-  })
+  for (let i = 0, l = items.length; i < l; i++) {
+    observe(items[i])
+  }
 }
 
 /**
@@ -62,11 +60,11 @@ Observer.prototype.observeArray = function (items) {
  * the events when the property is accessed/changed.
  *
  * @param {String} key
- * @param {*} val
+ * @param {*} value
  */
 
-Observer.prototype.convert = function (key, val) {
-  defineReactive(this.value, key, val)
+Observer.prototype.convert = function (key, value) {
+  defineReactive(this.value, key, value)
 }
 
 /**
@@ -82,12 +80,12 @@ export function observe (value) {
   if (!value || typeof value !== 'object') {
     return
   }
-  var ob
+  let ob
   if (
-    Object.prototype.hasOwnProperty.call(value, '__ob__')
-    && value.__ob__ instanceof Observer
+    Object.prototype.hasOwnProperty.call(value, OB_NAME)
+    && value[OB_NAME] instanceof Observer
   ) {
-    ob = value.__ob__
+    ob = value[OB_NAME]
   } else if (
     (isArray(value) || isPlainObject(value))
     && Object.isExtensible(value)
@@ -100,52 +98,53 @@ export function observe (value) {
 /**
  * Define a reactive property on an Object.
  *
- * @param {Object} obj
+ * @param {Object} object
  * @param {String} key
- * @param {*} val
+ * @param {*} value
  */
 
-export function defineReactive (obj, key, val) {
-  var dep = new Dep()
+export function defineReactive (object, key, value) {
+  const dep = new Dep()
 
-  var desc = Object.getOwnPropertyDescriptor(obj, key)
+  const desc = Object.getOwnPropertyDescriptor(object, key)
   if (desc && desc.configurable === false) {
     return
   }
 
   // cater for pre-defined getter/setters
-  var getter = desc && desc.get
-  var setter = desc && desc.set
+  const getter = desc && desc.get
+  const setter = desc && desc.set
 
-  var childOb = observe(val)
+  let childOb = observe(value)
 
   function reactiveGetter () {
-    var value = getter ? getter.call(obj) : val
+    const currentValue = getter ? getter.call(object) : value
     if (Dep.target) {
       dep.depend()
       if (childOb) {
         childOb.dep.depend()
       }
-      if (isArray(value)) {
-        each(value, function (e) {
-          e && e.__ob__ && e.__ob__.dep.depend()
-        })
+      if (isArray(currentValue)) {
+        for (let i = 0, l = currentValue.length, e; i < l; i++) {
+          e = currentValue[i]
+          e && e[OB_NAME] && e[OB_NAME].dep.depend()
+        }
       }
     }
-    return value
+    return currentValue
   }
-  function reactiveSetter (newVal) {
-    var value = getter ? getter.call(obj) : val
-    if (newVal === value) {
+  function reactiveSetter (newValue) {
+    const oldValue = getter ? getter.call(object) : value
+    if (newValue === oldValue) {
       return
     }
     if (setter) {
-      setter.call(obj, newVal)
+      setter.call(object, newValue)
     } else {
-      val = newVal
+      value = newValue
     }
-    childOb = observe(newVal)
+    childOb = observe(newValue)
     dep.notify()
   }
-  defi(obj, key, reactiveGetter, reactiveSetter)
+  defi(object, key, reactiveGetter, reactiveSetter)
 }

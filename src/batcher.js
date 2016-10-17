@@ -1,7 +1,7 @@
-var queueIndex
-var queue = []
-var has = {}
-var waiting = false
+let queue = []
+let has = {}
+let waiting = false
+let queueIndex
 
 /**
  * Reset the batcher's state.
@@ -32,8 +32,8 @@ function runBatcherQueue (queue) {
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
   for (queueIndex = 0; queueIndex < queue.length; queueIndex++) {
-    var watcher = queue[queueIndex]
-    var id = watcher.id
+    const watcher = queue[queueIndex]
+    const id = watcher.id
     has[id] = null
     watcher.run()
   }
@@ -45,34 +45,32 @@ function runBatcherQueue (queue) {
  * MutationObserver if it's available, and fallback to
  * setTimeout(0).
  *
- * @param {Function} cb
- * @param {Object} ctx
+ * @param {Function} callback
+ * @param {Object} context
  */
 
 const nextTick = (function () {
-  var callbacks = []
-  var pending = false
-  var timerFunc
+  let callbacks = []
+  let pending = false
+  let timerFunction
   function nextTickHandler () {
     pending = false
-    var copies = callbacks.slice(0)
+    const callbackCopies = callbacks.slice(0)
     callbacks = []
-    for (var i = 0; i < copies.length; i++) {
-      copies[i]()
+    for (let i = 0; i < callbackCopies.length; i++) {
+      callbackCopies[i]()
     }
   }
 
   /* istanbul ignore if */
   if (typeof MutationObserver !== 'undefined') {
-    var counter = 1
+    let counter = 1
     /* global MutationObserver */
-    var observer = new MutationObserver(nextTickHandler)
+    const observer = new MutationObserver(nextTickHandler)
     /* global */
-    var textNode = document.createTextNode(counter)
-    observer.observe(textNode, {
-      characterData: true,
-    })
-    timerFunc = function () {
+    const textNode = document.createTextNode(counter)
+    observer.observe(textNode, {characterData: true})
+    timerFunction = function () {
       counter = (counter + 1) % 2
       textNode.data = counter
     }
@@ -82,19 +80,16 @@ const nextTick = (function () {
     // avoid bundling unnecessary code.
     const inBrowser = typeof window !== 'undefined'
       && Object.prototype.toString.call(window) !== '[object Object]'
-    const context = inBrowser
-      ? window
-      : typeof global !== 'undefined' ? global : {}
-    timerFunc = context.setImmediate || setTimeout
+    const context =
+      inBrowser ? window : typeof global !== 'undefined' ? global : {}
+    timerFunction = context.setImmediate || setTimeout
   }
-  return function (cb, ctx) {
-    var func = ctx
-      ? function () { cb.call(ctx) }
-      : cb
-    callbacks.push(func)
+  return function (callback, context) {
+    const fun = context ? function () { callback.call(context) } : callback
+    callbacks.push(fun)
     if (pending) return
     pending = true
-    timerFunc(nextTickHandler, 0)
+    timerFunction(nextTickHandler, 0)
   }
 })()
 
@@ -110,7 +105,7 @@ const nextTick = (function () {
  */
 
 export default function batch (watcher) {
-  var id = watcher.id
+  const id = watcher.id
   if (has[id] == null) {
     has[id] = queue.length
     queue.push(watcher)

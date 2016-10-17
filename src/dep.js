@@ -1,59 +1,59 @@
-import { each } from './utils'
-
 let uid = 0
 
 /**
  * A dep is an observable that can have multiple
- * directives subscribing to it.
+ * watcher subscribing to it.
  *
  * @constructor
  */
 
-export default function Dep () {
-  this.id = uid++
-  this.subs = []
-}
+export default class Dep {
+  // the current target watcher being evaluated.
+  // this is globally unique because there could be only one
+  // watcher being evaluated at any time.
+  static target = null
 
-// the current target watcher being evaluated.
-// this is globally unique because there could be only one
-// watcher being evaluated at any time.
-Dep.target = null
+  constructor () {
+    this.id = uid++
+    this.subs = []
+  }
 
-/**
- * Add a directive subscriber.
- *
- * @param {Directive} sub
- */
+  /**
+   * Add a subscriber.
+   *
+   * @param {Watcher} sub
+   */
 
-Dep.prototype.addSub = function (sub) {
-  this.subs.push(sub)
-}
+  addSub (sub) {
+    this.subs.push(sub)
+  }
 
-/**
- * Remove a directive subscriber.
- *
- * @param {Directive} sub
- */
+  /**
+   * Remove a subscriber.
+   *
+   * @param {Watcher} sub
+   */
 
-Dep.prototype.removeSub = function (sub) {
-  this.subs.$remove(sub)
-}
+  removeSub (sub) {
+    this.subs.$remove(sub)
+  }
 
-/**
- * Add self as a dependency to the target watcher.
- */
+  /**
+   * Add self as a dependency to the target watcher.
+   */
 
-Dep.prototype.depend = function () {
-  Dep.target.addDep(this)
-}
+  depend () {
+    Dep.target.addDep(this)
+  }
 
-/**
- * Notify all subscribers of a new value.
- */
+  /**
+   * Notify all subscribers of a new value.
+   */
 
-Dep.prototype.notify = function () {
-  var subs = this.subs
-  each(subs, function (sub) {
-    sub.update()
-  })
+  notify () {
+    const subs = this.subs
+    for (let i = 0, l = subs.length; i < l; i++) {
+      subs[i].update()
+    }
+  }
 }

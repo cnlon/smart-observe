@@ -1,4 +1,4 @@
-import { warn } from './utils'
+import {warn} from './utils'
 
 /**
  * Build a getter function. Requires eval.
@@ -10,29 +10,24 @@ import { warn } from './utils'
  * @return {Function|undefined}
  */
 
-function makeGetterFn (body) {
+function makeGetterFunction (body) {
   try {
     /* eslint-disable no-new-func */
-    return new Function('scope', 'return ' + body + ';')
+    return new Function('scope', `return ${body};`)
     /* eslint-enable no-new-func */
   } catch (e) {
-    warn(
-      'Invalid expression. '
-      + 'Generated function body: '
-      + body
-    )
+    warn('Invalid expression. Generated function body: ' + body)
   }
 }
 
 /**
  * Parse an expression to getter.
  *
- * @param {String} exp
- * @return {Function}
+ * @param {String} expression
+ * @return {Function|undefined}
  */
 
-export default function parse (exp) {
-  exp = exp.trim()
-  var getter = makeGetterFn('scope.' + exp)
-  return getter
+export default function parse (expression) {
+  expression = String.prototype.trim.call(expression)
+  return makeGetterFunction('scope.' + expression)
 }
