@@ -1,3 +1,4 @@
+import ob from './ob.js'
 import Dep from './dep'
 import parseExpression from './expression'
 import batch from './batcher'
@@ -233,8 +234,21 @@ export function watch (owner, expressionOrFunction, callback, options) {
  */
 
 export function makeComputed (owner, getter) {
-  const watcher = new Watcher(owner, getter, null, {lazy: true})
+  const watcher = new Watcher(owner, getter, null, {
+    deep: ob.deep,
+    lazy: true,
+    sync: ob.sync,
+  })
   return function computedGetter () {
+    if (watcher.options.lazy && Dep.target && !Dep.target.options.lazy) {
+      watcher.options.lazy = false
+      watcher.callback = function () {
+        const deps = watcher.deps
+        for (let i = 0, l = deps.length; i < l; i++) {
+          deps[i].notify()
+        }
+      }
+    }
     if (watcher.dirty) {
       watcher.evaluate()
     }
