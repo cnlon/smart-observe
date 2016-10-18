@@ -94,14 +94,18 @@ target.radii = 3
 
 #### 方法
 
-`ob.watch(target, expression, callback)`
+**`ob(...)`**
+
+- 为方法 `ob.default` 的语法糖，`ob.default` 参见属性
+
+**`ob.watch(target, expression, callback)`**
 
 - `target`: 任意对象
 - `expression`: `String` 或 `Function`
 - `callback`: `Function`
 - 返回 `Watcher`，调用 `watcher.teardown()` 可以取消监测
 
-`ob.compute(target, name, accessor, cache)`
+**`ob.compute(target, name, accessor, cache)`**
 
 - `target`: 任意对象
 - `name`: `String`
@@ -113,7 +117,7 @@ target.radii = 3
     - `cache`: `Boolean`，可选，默认为 `true`，如果设为 `false`，每次读取计算属性都要重新计算
 - `cache`: `Boolean`，可选，默认为 `true`，仅当 `accessor` 为 `Function` 时有效。
 
-`ob.react(options, target)`
+**`ob.react(options, target)`**
 
 - `options`: `Object`，要配置的参数集合，可以包含:
   - `data`: 要附加的字段
@@ -122,10 +126,6 @@ target.radii = 3
   - `methods`: 要附加的方法，这些方法将会自动绑定 `target`
 - `target`: 任意对象，可选，默认为空对象，`options` 的参数将附加到此对象上
 - 返回 `target`
-
-#### `ob(...)`
-
-  为方法 `ob.default` 的语法糖，`ob.default` 参见属性
 
 ## License
 
