@@ -5,6 +5,7 @@ import {
   isArray,
   isObject,
   isFunction,
+  _Set as Set,
 } from './utils'
 import {WATCHERS_PROPERTY_NAME} from './constants'
 
@@ -39,8 +40,8 @@ class Watcher {
     this.dirty = options.lazy
     this.deps = []
     this.newDeps = []
-    this.depIds = Object.create(null)
-    this.newDepIds = null
+    this.depIds = new Set()
+    this.newDepIds = new Set()
     this.value = options.lazy
       ? undefined
       : this.get()
@@ -67,8 +68,6 @@ class Watcher {
 
   beforeGet () {
     Dep.target = this
-    this.newDepIds = Object.create(null)
-    this.newDeps.length = 0
   }
 
   /**
@@ -79,10 +78,10 @@ class Watcher {
 
   addDep (dep) {
     const id = dep.id
-    if (!this.newDepIds[id]) {
-      this.newDepIds[id] = true
+    if (!this.newDepIds.has(id)) {
+      this.newDepIds.add(id)
       this.newDeps.push(dep)
-      if (!this.depIds[id]) {
+      if (!this.depIds.has(id)) {
         dep.addSub(this)
       }
     }
@@ -97,14 +96,18 @@ class Watcher {
     let i = this.deps.length
     while (i--) {
       const dep = this.deps[i]
-      if (!this.newDepIds[dep.id]) {
+      if (!this.newDepIds.has(dep.id)) {
         dep.removeSub(this)
       }
     }
+    let tmp = this.depIds
     this.depIds = this.newDepIds
-    /* eslint-disable no-unexpected-multiline, no-sequences */
-    [this.deps, this.newDeps] = [this.newDeps, this.deps]
-    /* eslint-enable no-unexpected-multiline, no-sequences */
+    this.newDepIds = tmp
+    this.newDepIds.clear()
+    tmp = this.deps
+    this.deps = this.newDeps
+    this.newDeps = tmp
+    this.newDeps.length = 0
   }
 
   /**
