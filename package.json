@@ -4,6 +4,7 @@
   "description": "ob.js comes from vue.js and is used to observe/watch Object/Array/Class",
   "main": "dist/ob.js",
   "scripts": {
+    "test": "mocha",
     "lint": "eslint src/**",
     "build": "rm -rf dist && npm run rollup && MIN=min npm run rollup",
     "rollup": "rollup --config --environment NODE_ENV:production --sourcemap",

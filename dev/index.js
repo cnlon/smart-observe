@@ -1,68 +1,27 @@
 import ob from 'ob.js'
 
 window.onload = function () {
-  var option = {
+  const target = window.d = ob.react({
     data: {
-      // a: 2,
-      c: {
-        c: 3,
-        d () {},
-      },
-      e: [1, 2, {v: 2}],
+      PI: Math.PI,
+      radii: 2,
     },
     computed: {
-      b () {
-        return this.a * 100
-      },
-      d: {
-        get () {
-          return this.c.c * 100
-        },
+      'area': function () {
+        return this.PI * this.square(this.radii)
       },
     },
     watchers: {
-      'a': function (newValue, oldValue) {
-        this.innerWatch(newValue, oldValue)
+      'area': function (newValue, oldValue) {
+        console.log(newValue)
       },
     },
     methods: {
-      innerWatch (newValue, oldValue) {
-        log('watch prop yes!  ' + newValue + ',' + oldValue, 'inner')
+      square (num) {
+        return num * num
       },
     },
-  }
-
-  var d = window.d = {a: 2}
-  ob(d, option)
-
-  function log (msg, prefix) {
-    document.getElementById('demo').innerHTML += `<p>${prefix}: ${msg}</p>`
-  }
-  function test1 () {
-    if (d.a === 2 && d.b === 200) {
-      return setTimeout(function () {
-        if (d.a === 4 && d.b === 400) {
-          log('computed yes', 'test1')
-        } else {
-          log('computed error', 'test1')
-        }
-      })
-    }
-  }
-  function test2 () {
-    ob.watch(d, 'a', function (newValue, oldValue) {
-      log('watch prop yes!   ' + newValue + ',' + oldValue, 'test2')
-    })
-  }
-  function test3 () {
-    ob.watch(d, 'e[0]', function (newValue, oldValue) {
-      log('watch array yes!   ' + newValue + ',' + oldValue, 'test3')
-    })
-  }
-  test1()
-  test2()
-  d.a = 4
-  test3()
-  d.e.$set(0, 3)
-  console.dir(d)
+  })
+  target.radii = 3
+  console.dir(target)
 }
