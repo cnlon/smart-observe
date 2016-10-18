@@ -78,6 +78,7 @@ function react (options, target) {
  *        - Object accessor
  *          - Function [get]  - getter
  *          - Function [set]  - setter
+ *          - Boolean [cache]
  * @param {Boolean} [cache]
  */
 
@@ -87,11 +88,13 @@ function compute (target, name, getterOrAccessor, cache) {
   }
   let getter, setter
   if (isFunction(getterOrAccessor)) {
-    getter = makeComputed(target, getterOrAccessor)
+    getter = cache !== false
+            ? makeComputed(target, getterOrAccessor)
+            : getterOrAccessor.bind(this)
     setter = noop
   } else {
     getter = getterOrAccessor.get
-            ? cache !== false
+            ? getterOrAccessor.cache !== false || cache !== false
               ? makeComputed(target, getterOrAccessor.get)
               : getterOrAccessor.get.bind(this)
             : noop
