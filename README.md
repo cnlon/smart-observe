@@ -8,6 +8,7 @@
 **ob.js** 来自 [**vue.js**](https://github.com/vuejs/vue)，是一个小巧、高效，用于监测 javascript 对象、数组、类 变化的库
 
 ## 安装
+
 ``` bash
 npm install --save ob.js
 ```
@@ -15,6 +16,10 @@ npm install --save ob.js
 ## 使用
 
 #### 监测属性 `ob.watch(target, expression, callback)` 或 `ob(target, expression, callback)`
+
+试一试：
+[codepen](http://codepen.io/lon/pen/rrqLLk?editors=0010#0)
+[jsfiddle](https://jsfiddle.net/lon/x4n2yjLn/)
 
 ``` javascript
 import ob from 'ob.js'
@@ -30,6 +35,10 @@ target.a = 3
 ```
 
 #### 添加计算属性 `ob.compute(target, name, getter)`
+
+试一试：
+[codepen](http://codepen.io/lon/pen/dpgXLN?editors=0010#0)
+[jsfiddle](https://jsfiddle.net/lon/q402v3jd/)
 
 ``` javascript
 import ob from 'ob.js'
@@ -52,6 +61,10 @@ console.log(`b: ${target.b}`)
 ```
 
 #### 监测属性并添加计算属性 `ob.react(options)`
+
+试一试：
+[codepen](http://codepen.io/lon/pen/zKmKqA?editors=0010#0)
+[jsfiddle](https://jsfiddle.net/lon/ufth8xpe/)
 
 ``` javascript
 import ob from 'ob.js'
