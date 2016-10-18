@@ -33,7 +33,7 @@ import ob from 'ob.js'
 class Claz {
   constructor () {
     this.a = 1
-    ob.compute(this, 'b', () => this.double(this.a))
+    ob.compute(this, 'b', () => this.double(this.a)) // 小心 this 绑定
   }
   double (num) {
     return num * 2
@@ -59,7 +59,7 @@ const options = {
   },
   computed: {
     'area': function () {
-      return this.PI * this.square(this.b) // πr²
+      return this.PI * this.square(this.radii) // πr²
     },
   },
   watchers: {
@@ -74,7 +74,7 @@ const options = {
   },
 }
 const target = ob.react(options)
-target.a = 3
+target.radii = 3
 // area: 28.274333882308138
 ```
 
@@ -86,7 +86,7 @@ target.a = 3
 | --- | --- | --- | --- |
 | `ob.deep` | `Boolean` | 默认为 `false` | 如果为 `true`，`ob.watch(target, expression, callback)` 将会对 `target` 深度监测 |
 | `ob.sync` | `Boolean` | 默认为 `false` | 如果为 `true`，`ob.watch(target, expression, callback)` 监测到属性变化时，立即调用回调函数 |
-| `ob.default` | `Function` | 只能为 `ob.react`，`ob.watch` 或 `ob.compute`， 默认为 `ob.watch` | 设置 `ob(...)` 实际调用的方法，写起来简洁一些 |
+| `ob.default` | `Function` | 只能为 `ob.react`，`ob.watch` 或 `ob.compute`， 默认为 `ob.react` | 设置 `ob(...)` 实际调用的方法，写起来简洁一些 |
 
 #### 方法
 
@@ -126,5 +126,3 @@ target.a = 3
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
-
-Copyright (c) 2016 lon
