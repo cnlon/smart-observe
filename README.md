@@ -20,7 +20,7 @@ npm install --save ob.js
 import ob from 'ob.js'
 
 const target = {a: 1}
-ob.watch(target, 'a', (newValue, oldValue) => console.log(`a: ${newValue}`))
+ob.watch(target, 'a', (newValue, oldValue) => console.log(`a: ${newValue}`)) // 或 ob(target, expression, callback)
 target.a = 2
 // a: 2
 ```
@@ -86,7 +86,7 @@ target.radii = 3
 | --- | --- | --- | --- |
 | `ob.deep` | `Boolean` | 默认为 `false` | 如果为 `true`，`ob.watch(target, expression, callback)` 将会对 `target` 深度监测 |
 | `ob.sync` | `Boolean` | 默认为 `false` | 如果为 `true`，`ob.watch(target, expression, callback)` 监测到属性变化时，立即调用回调函数 |
-| `ob.default` | `Function` | 只能为 `ob.react`，`ob.watch` 或 `ob.compute`， 默认为 `ob.react` | 设置 `ob(...)` 实际调用的方法，写起来简洁一些 |
+| `ob.default` | `Function` | 只能为 `ob.react`，`ob.watch` 或 `ob.compute`， 默认为 `ob.watch` | 设置 `ob(...)` 实际调用的方法，写起来简洁一些 |
 
 #### 方法
 

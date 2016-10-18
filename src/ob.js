@@ -19,7 +19,7 @@ import {
 } from './constants'
 
 // Only could be react, compute or watch
-ob.default = react
+ob.default = watch
 ob.deep = ob.lazy = ob.sync = false
 
 Object.setPrototypeOf(ob, {react, compute, watch})
