@@ -15,6 +15,11 @@
 npm install --save ob.js
 ```
 
+#### Bower
+``` bash
+bower install --save ob.js
+```
+
 ## Usage
 
 #### To watch expression. `ob.watch(target, expression, callback)` or `ob(target, expression, callback)`
@@ -24,8 +29,6 @@ Try it on:
 [jsfiddle](https://jsfiddle.net/lon/x4n2yjLn/)
 
 ``` javascript
-import ob from 'ob.js'
-
 const target = {a: 1}
 ob(target, 'a', function (newValue, oldValue) {
   console.log(`a: ${newValue}`)
@@ -43,8 +46,6 @@ Try it on:
 [jsfiddle](https://jsfiddle.net/lon/q402v3jd/)
 
 ``` javascript
-import ob from 'ob.js'
-
 class Claz {
   constructor () {
     this.a = 1
@@ -69,8 +70,6 @@ Try it on:
 [jsfiddle](https://jsfiddle.net/lon/ufth8xpe/)
 
 ``` javascript
-import ob from 'ob.js'
-
 const options = {
   data: {
     PI: Math.PI,

@@ -10,8 +10,14 @@
 
 ## 安装
 
+#### NPM
 ``` bash
 npm install --save ob.js
+```
+
+#### Bower
+``` bash
+bower install --save ob.js
 ```
 
 ## 使用
@@ -23,8 +29,6 @@ npm install --save ob.js
 [jsfiddle](https://jsfiddle.net/lon/x4n2yjLn/)
 
 ``` javascript
-import ob from 'ob.js'
-
 const target = {a: 1}
 ob(target, 'a', function (newValue, oldValue) {
   console.log(`a: ${newValue}`)
@@ -42,8 +46,6 @@ target.a = 3
 [jsfiddle](https://jsfiddle.net/lon/q402v3jd/)
 
 ``` javascript
-import ob from 'ob.js'
-
 class Claz {
   constructor () {
     this.a = 1
@@ -68,8 +70,6 @@ console.log(`b: ${target.b}`)
 [jsfiddle](https://jsfiddle.net/lon/ufth8xpe/)
 
 ``` javascript
-import ob from 'ob.js'
-
 const options = {
   data: {
     PI: Math.PI,
