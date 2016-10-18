@@ -57,7 +57,8 @@ function react (options, target) {
       init(target)
     }
   } else {
-    target = Object.create(null)
+    target = {}
+    init(target)
   }
   options.methods && carryMethods(target, options.methods)
   options.data && reactProperties(target, options.data)
