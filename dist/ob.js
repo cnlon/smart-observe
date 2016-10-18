@@ -166,8 +166,6 @@ var createClass = function () {
 
 
 
-
-
 var get$1 = function get$1(object, property, receiver) {
   if (object === null) object = Function.prototype;
   var desc = Object.getOwnPropertyDescriptor(object, property);
@@ -192,8 +190,6 @@ var get$1 = function get$1(object, property, receiver) {
     return getter.call(receiver);
   }
 };
-
-
 
 
 
@@ -1147,6 +1143,7 @@ function react(options, target) {
  *        - Object accessor
  *          - Function [get]  - getter
  *          - Function [set]  - setter
+ *          - Boolean [cache]
  * @param {Boolean} [cache]
  */
 
@@ -1157,10 +1154,10 @@ function compute(target, name, getterOrAccessor, cache) {
   var getter = void 0,
       setter = void 0;
   if (isFunction(getterOrAccessor)) {
-    getter = makeComputed(target, getterOrAccessor);
+    getter = cache !== false ? makeComputed(target, getterOrAccessor) : getterOrAccessor.bind(this);
     setter = noop;
   } else {
-    getter = getterOrAccessor.get ? cache !== false ? makeComputed(target, getterOrAccessor.get) : getterOrAccessor.get.bind(this) : noop;
+    getter = getterOrAccessor.get ? getterOrAccessor.cache !== false || cache !== false ? makeComputed(target, getterOrAccessor.get) : getterOrAccessor.get.bind(this) : noop;
     setter = getterOrAccessor.set ? getterOrAccessor.set.bind(this) : noop;
   }
   defi(target, name, getter, setter);
