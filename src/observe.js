@@ -80,19 +80,19 @@ export function observe (value) {
   if (!value || typeof value !== 'object') {
     return
   }
-  let ob
+  let observer
   if (
     Object.prototype.hasOwnProperty.call(value, OB_NAME)
     && value[OB_NAME] instanceof Observer
   ) {
-    ob = value[OB_NAME]
+    observer = value[OB_NAME]
   } else if (
     (isArray(value) || isPlainObject(value))
     && Object.isExtensible(value)
   ) {
-    ob = new Observer(value)
+    observer = new Observer(value)
   }
-  return ob
+  return observer
 }
 
 /**

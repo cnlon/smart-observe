@@ -421,6 +421,27 @@ function noop() {}
 
 var warn = IS_DEBUG && console && isFunction(console.warn) ? console.warn : noop;
 
+var _Set = void 0;
+/* istanbul ignore if */
+if (typeof Set !== 'undefined' && Set.toString().match(/native code/)) {
+  // use native Set when available.
+  _Set = Set;
+} else {
+  // a non-standard Set polyfill that only works with primitive keys.
+  _Set = function _Set() {
+    this.set = Object.create(null);
+  };
+  _Set.prototype.has = function (key) {
+    return this.set[key] !== undefined;
+  };
+  _Set.prototype.add = function (key) {
+    this.set[key] = 1;
+  };
+  _Set.prototype.clear = function () {
+    this.set = Object.create(null);
+  };
+}
+
 var arrayPrototype = Array.prototype;
 var arrayMethods = Object.create(arrayPrototype);
 var arrayMutativeMethods = ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'];
@@ -580,13 +601,13 @@ function observe(value) {
   if (!value || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) !== 'object') {
     return;
   }
-  var ob = void 0;
+  var observer = void 0;
   if (Object.prototype.hasOwnProperty.call(value, OB_NAME) && value[OB_NAME] instanceof Observer) {
-    ob = value[OB_NAME];
+    observer = value[OB_NAME];
   } else if ((isArray(value) || isPlainObject(value)) && Object.isExtensible(value)) {
-    ob = new Observer(value);
+    observer = new Observer(value);
   }
-  return ob;
+  return observer;
 }
 
 /**
@@ -829,8 +850,8 @@ var Watcher = function () {
     this.dirty = options.lazy;
     this.deps = [];
     this.newDeps = [];
-    this.depIds = Object.create(null);
-    this.newDepIds = null;
+    this.depIds = new _Set();
+    this.newDepIds = new _Set();
     this.value = options.lazy ? undefined : this.get();
   }
 
@@ -859,8 +880,6 @@ var Watcher = function () {
     key: 'beforeGet',
     value: function beforeGet() {
       Dep.target = this;
-      this.newDepIds = Object.create(null);
-      this.newDeps.length = 0;
     }
 
     /**
@@ -873,10 +892,10 @@ var Watcher = function () {
     key: 'addDep',
     value: function addDep(dep) {
       var id = dep.id;
-      if (!this.newDepIds[id]) {
-        this.newDepIds[id] = true;
+      if (!this.newDepIds.has(id)) {
+        this.newDepIds.add(id);
         this.newDeps.push(dep);
-        if (!this.depIds[id]) {
+        if (!this.depIds.has(id)) {
           dep.addSub(this);
         }
       }
@@ -893,14 +912,18 @@ var Watcher = function () {
       var i = this.deps.length;
       while (i--) {
         var dep = this.deps[i];
-        if (!this.newDepIds[dep.id]) {
+        if (!this.newDepIds.has(dep.id)) {
           dep.removeSub(this);
         }
       }
-      this.depIds = this.newDepIds
-      /* eslint-disable no-unexpected-multiline, no-sequences */
-      [(this.deps, this.newDeps)] = [this.newDeps, this.deps];
-      /* eslint-enable no-unexpected-multiline, no-sequences */
+      var tmp = this.depIds;
+      this.depIds = this.newDepIds;
+      this.newDepIds = tmp;
+      this.newDepIds.clear();
+      tmp = this.deps;
+      this.deps = this.newDeps;
+      this.newDeps = tmp;
+      this.newDeps.length = 0;
     }
 
     /**
@@ -1039,8 +1062,21 @@ function watch$1(owner, expressionOrFunction, callback, options) {
  */
 
 function makeComputed(owner, getter) {
-  var watcher = new Watcher(owner, getter, null, { lazy: true });
+  var watcher = new Watcher(owner, getter, null, {
+    deep: ob.deep,
+    lazy: true,
+    sync: ob.sync
+  });
   return function computedGetter() {
+    if (watcher.options.lazy && Dep.target && !Dep.target.options.lazy) {
+      watcher.options.lazy = false;
+      watcher.callback = function () {
+        var deps = watcher.deps;
+        for (var i = 0, l = deps.length; i < l; i++) {
+          deps[i].notify();
+        }
+      };
+    }
     if (watcher.dirty) {
       watcher.evaluate();
     }
@@ -1052,7 +1088,7 @@ function makeComputed(owner, getter) {
 }
 
 // Only could be react, compute or watch
-ob.default = react;
+ob.default = watch$$1;
 ob.deep = ob.lazy = ob.sync = false;
 
 Object.setPrototypeOf(ob, { react: react, compute: compute, watch: watch$$1 });
@@ -1090,7 +1126,8 @@ function react(options, target) {
       init(target);
     }
   } else {
-    target = Object.create(null);
+    target = {};
+    init(target);
   }
   options.methods && carryMethods(target, options.methods);
   options.data && reactProperties(target, options.data);
