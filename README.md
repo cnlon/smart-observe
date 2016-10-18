@@ -14,15 +14,19 @@ npm install --save ob.js
 
 ## 使用
 
-#### 监测属性 `ob.watch(target, expression, callback)`
+#### 监测属性 `ob.watch(target, expression, callback)` 或 `ob(target, expression, callback)`
 
 ``` javascript
 import ob from 'ob.js'
 
 const target = {a: 1}
-ob.watch(target, 'a', (newValue, oldValue) => console.log(`a: ${newValue}`)) // 或 ob(target, expression, callback)
-target.a = 2
-// a: 2
+ob(target, 'a', function (newValue, oldValue) {
+  console.log(`a: ${newValue}`)
+  console.log(newValue === this.a) // this 会自动绑定至 target
+})
+target.a = 3
+// a: 3
+// true
 ```
 
 #### 添加计算属性 `ob.compute(target, name, getter)`
@@ -33,7 +37,7 @@ import ob from 'ob.js'
 class Claz {
   constructor () {
     this.a = 1
-    ob.compute(this, 'b', () => this.double(this.a)) // 小心 this 绑定
+    ob.compute(this, 'b', () => this.double(this.a)) // 使用箭头函数要小心 this 绑定
   }
   double (num) {
     return num * 2

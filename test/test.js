@@ -7,22 +7,21 @@ var equal = assert.equal
 describe('ob', function () {
   describe('#watch()', function () {
     const target = {a: 1}
-    it('target.a\'s old value should equal 1, new value should equal 2', done => {
-      ob.watch(target, 'a', function (newValue, oldValue) {
-        equal(newValue, 2)
+    it('target.a\'s old value should equal 1, new value should equal 3, "this" should bound to target', done => {
+      ob(target, 'a', function (newValue, oldValue) {
+        equal(newValue, 3)
         equal(oldValue, 1)
+        equal(newValue, this.a)
         done()
       })
-      target.a = 2
+      target.a = 3
     })
   })
   describe('#compute()', function () {
     class Claz {
       constructor () {
         this.a = 1
-        ob.compute(this, 'b', function () {
-          this.double(this.a)
-        })
+        ob.compute(this, 'b', () => this.double(this.a))
       }
       double (num) {
         return num * 2
@@ -36,7 +35,7 @@ describe('ob', function () {
     })
   })
   describe('#react()', function () {
-    it('area should equal Math.PI * 9', function (done) {
+    it('area should equal 28.274333882308138', function (done) {
       const target = ob.react({
         data: {
           PI: Math.PI,
@@ -49,7 +48,7 @@ describe('ob', function () {
         },
         watchers: {
           'area': function (newValue, oldValue) {
-            equal(newValue, Math.PI * 3 * 3)
+            equal(newValue, 28.274333882308138)
             done()
           },
         },
