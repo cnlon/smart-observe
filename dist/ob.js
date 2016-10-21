@@ -1,6 +1,6 @@
 /**
  * ob.js --- By lon
- * Github: https://github.com/lon3/ob.js
+ * Github: https://github.com/cnlon/ob.js
  * MIT Licensed.
  */
 (function (global, factory) {

@@ -1,8 +1,8 @@
-[中文](https://github.com/lon3/ob.js/blob/master/README.md) | english
+[中文](https://github.com/cnlon/ob.js/blob/master/README.md) | english
 
 # ob.js
 
-[![Build Status](https://travis-ci.org/lon3/ob.js.svg?branch=master)](https://travis-ci.org/lon3/ob.js)
+[![Build Status](https://travis-ci.org/cnlon/ob.js.svg?branch=master)](https://travis-ci.org/cnlon/ob.js)
 [![npm version](https://badge.fury.io/js/ob.js.svg)](https://badge.fury.io/js/ob.js)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
