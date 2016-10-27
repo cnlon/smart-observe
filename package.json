@@ -6,8 +6,11 @@
   "scripts": {
     "test": "mocha",
     "lint": "eslint src/**",
-    "build": "rm -rf dist && npm run rollup && MIN=min npm run rollup",
+    "clean": "rm -rf dist",
     "rollup": "rollup --config --environment NODE_ENV:production --sourcemap",
+    "prebuild": "npm run lint && npm run clean",
+    "build": "npm run rollup && MIN=min npm run rollup",
+    "postbuild": "npm run test",
     "dev": "webpack-dev-server --config dev/webpack.config.js --content-base dev/ --inline --hot --port 3031"
   },
   "repository": {
