@@ -1,4 +1,4 @@
-中文 | [english](https://github.com/cnlon/ob.js/blob/master/README.en.md)
+english | [中文](https://github.com/cnlon/ob.js/blob/master/README.zh.md)
 
 # ob.js
 
@@ -6,11 +6,11 @@
 [![npm version](https://badge.fury.io/js/ob.js.svg)](https://badge.fury.io/js/ob.js)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
-**ob.js** 来自 [**vue.js**](https://github.com/vuejs/vue)，是一个小巧、高效，用于监测 javascript 对象、数组、类 变化的库
 
-## 安装
+**ob.js** comes from [**vue.js**](https://github.com/vuejs/vue). It's a small, efficient library for observing changes to javascript Object, Array and Class.
 
-#### NPM
+## Installation
+
 ``` bash
 npm install --save ob.js
 ```
@@ -20,11 +20,11 @@ npm install --save ob.js
 bower install --save ob.js
 ```
 
-## 使用
+## Usage
 
-#### 监测属性 `ob.watch(target, expression, callback)` 或 `ob(target, expression, callback)`
+#### To watch expression. `ob.watch(target, expression, callback)` or `ob(target, expression, callback)`
 
-试一试：
+Try it on:
 [codepen](http://codepen.io/lon/pen/rrqLLk?editors=0010#0)
 [jsfiddle](https://jsfiddle.net/lon/x4n2yjLn/)
 
@@ -32,16 +32,16 @@ bower install --save ob.js
 const target = {a: 1}
 ob(target, 'a', function (newValue, oldValue) {
   console.log(`a: ${newValue}`)
-  console.log(newValue === this.a) // this 会自动绑定至 target
+  console.log(newValue === this.a) // 'this' has bound to target
 })
 target.a = 3
 // a: 3
 // true
 ```
 
-#### 添加计算属性 `ob.compute(target, name, getter)`
+#### To add computed property. `ob.compute(target, name, getter)`
 
-试一试：
+Try it on:
 [codepen](http://codepen.io/lon/pen/dpgXLN?editors=0010#0)
 [jsfiddle](https://jsfiddle.net/lon/q402v3jd/)
 
@@ -49,7 +49,7 @@ target.a = 3
 class Claz {
   constructor () {
     this.a = 1
-    ob.compute(this, 'b', () => this.double(this.a)) // 使用箭头函数要小心 this 绑定
+    ob.compute(this, 'b', () => this.double(this.a)) // Be careful with 'this' when using arrow function
   }
   double (num) {
     return num * 2
@@ -63,9 +63,9 @@ console.log(`b: ${target.b}`)
 // b: 6
 ```
 
-#### 监测属性并添加计算属性 `ob.react(options)`
+#### To watch expressions and computed properties. `ob.react(options)`
 
-试一试：
+Try it on:
 [codepen](http://codepen.io/lon/pen/zKmKqA?editors=0010#0)
 [jsfiddle](https://jsfiddle.net/lon/ufth8xpe/)
 
@@ -98,48 +98,48 @@ target.radii = 3
 
 ## API
 
-#### 属性
+#### properties
 
-| 名称 | 类型 | 值 | 说明 |
+| name | type | value | detail |
 | --- | --- | --- | --- |
-| `ob.deep` | `Boolean` | 默认为 `false` | 如果为 `true`，`ob.watch(target, expression, callback)` 将会对 `target` 深度监测 |
-| `ob.sync` | `Boolean` | 默认为 `false` | 如果为 `true`，`ob.watch(target, expression, callback)` 监测到属性变化时，立即调用回调函数 |
-| `ob.default` | `Function` | 只能为 `ob.react`，`ob.watch` 或 `ob.compute`， 默认为 `ob.watch` | 设置 `ob(...)` 实际调用的方法，写起来简洁一些 |
+| `ob.deep` | `Boolean` | The default is `false` | If `true`, `ob.watch(target, expression, callback)` will observe `target` deeply |
+| `ob.sync` | `Boolean` | The default is `false` | If `true`, `ob.watch(target, expression, callback)` will invoke callback immediately when a property change is detected |
+| `ob.default` | `Function` | Could only be one of `ob.react`, `ob.watch` and `ob.compute`. The default is `ob.watch` | Set actual method to `ob.default` for `ob(...)` |
 
-#### 方法
+#### methods
 
 **`ob(...)`**
 
-- 为方法 `ob.default` 的语法糖，`ob.default` 参见属性
+- It's syntactic sugar of `ob.default`. See 'properties' for details
 
 **`ob.watch(target, expression, callback)`**
 
-- `target`: 任意对象
-- `expression`: `String` 或 `Function`
+- `target`: Any object
+- `expression`: `String` or `Function`
 - `callback`: `Function`
-- 返回 `Watcher`，调用 `watcher.teardown()` 可以取消监测
+- Returns `Watcher`. And calling `watcher.teardown()` could unwatch expression
 
 **`ob.compute(target, name, accessor, cache)`**
 
-- `target`: 任意对象
+- `target`: Any object
 - `name`: `String`
 - `accessor`:
-  - `Function`: 会作为 `getter`，等同传入 {get: accessor}
-  - `Object`: 可以包含：(其中，至少包含 `get` 或 `set`)
+  - `Function`: It will be the `get` of accessor
+  - `Object`: Contains: (at least `get` or `set`)
     - `get`: `Function`
     - `set`: `Function`
-    - `cache`: `Boolean`，可选，默认为 `true`，如果设为 `false`，每次读取计算属性都要重新计算
-- `cache`: `Boolean`，可选，默认为 `true`，仅当 `accessor` 为 `Function` 时有效。
+    - `cache`: `Boolean`. Optional. The default is `true`. If `false`, the `get` will be evaluated whenever reading computed properties
+- `cache`: `Boolean`. Same as `accessor.cache`
 
 **`ob.react(options, target)`**
 
-- `options`: `Object`，要配置的参数集合，可以包含:
-  - `data`: 要附加的字段
-  - `computed`: 要附加的计算属性
-  - `watchers`: 要监测的属性和计算属性
-  - `methods`: 要附加的方法，这些方法将会自动绑定 `target`
-- `target`: 任意对象，可选，默认为空对象，`options` 的参数将附加到此对象上
-- 返回 `target`
+- `options`: `Object`. Contains:
+  - `data`: It's the properties to add
+  - `computed`: It's the computed properties to add
+  - `watchers`: It's the watchers to watch properties or computed properties
+  - `methods`: The methods to add. And these will bind to `target`
+- `target`: Any object. Optional. The default is empty object. It will be attached with the fields of `options`
+- returns `target`
 
 ## License
 
