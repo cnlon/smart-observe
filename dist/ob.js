@@ -1,7 +1,6 @@
 /**
  * ob.js --- By lon
- * Github: https://github.com/cnlon/ob.js
- * MIT Licensed.
+ * https://github.com/cnlon/ob.js
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -528,61 +527,73 @@ def(arrayPrototype, '$remove', $remove);
  * object's property keys into getter/setters that
  * collect dependencies and dispatches updates.
  *
+ * @class
  * @param {Array|Object} value
- * @constructor
  */
 
-function Observer(value) {
-  this.value = value;
-  this.dep = new Dep();
-  def(value, OB_NAME, this);
-  if (isArray(value)) {
-    amend(value);
-    this.observeArray(value);
-  } else {
-    this.walk(value);
+var Observer = function () {
+  function Observer(value) {
+    classCallCheck(this, Observer);
+
+    this.value = value;
+    this.dep = new Dep();
+    def(value, OB_NAME, this);
+    if (isArray(value)) {
+      amend(value);
+      this.observeArray(value);
+    } else {
+      this.walk(value);
+    }
   }
-}
 
-/**
- * Walk through each property and convert them into
- * getter/setters. This method should only be called when
- * value type is Object.
- *
- * @param {Object} object
- */
+  /**
+   * Walk through each property and convert them into
+   * getter/setters. This method should only be called when
+   * value type is Object.
+   *
+   * @param {Object} object
+   */
 
-Observer.prototype.walk = function (object) {
-  var _this = this;
+  createClass(Observer, [{
+    key: 'walk',
+    value: function walk(object) {
+      var _this = this;
 
-  every(object, function (key, value) {
-    return _this.convert(key, value);
-  });
-};
+      every(object, function (key, value) {
+        return _this.convert(key, value);
+      });
+    }
 
-/**
- * Observe a list of Array items.
- *
- * @param {Array} items
- */
+    /**
+     * Observe a list of Array items.
+     *
+     * @param {Array} items
+     */
 
-Observer.prototype.observeArray = function (items) {
-  for (var i = 0, l = items.length; i < l; i++) {
-    observe(items[i]);
-  }
-};
+  }, {
+    key: 'observeArray',
+    value: function observeArray(items) {
+      for (var i = 0, l = items.length; i < l; i++) {
+        observe(items[i]);
+      }
+    }
 
-/**
- * Convert a property into getter/setter so we can emit
- * the events when the property is accessed/changed.
- *
- * @param {String} key
- * @param {*} value
- */
+    /**
+     * Convert a property into getter/setter so we can emit
+     * the events when the property is accessed/changed.
+     *
+     * @param {String} key
+     * @param {*} value
+     */
 
-Observer.prototype.convert = function (key, value) {
-  defineReactive(this.value, key, value);
-};
+  }, {
+    key: 'convert',
+    value: function convert(key, value) {
+      defineReactive(this.value, key, value);
+    }
+  }]);
+  return Observer;
+}();
 
 /**
  * Attempt to create an observer instance for a value,
@@ -594,9 +605,7 @@ Observer.prototype.convert = function (key, value) {
  */
 
 function observe(value) {
-  if (!value || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) !== 'object') {
-    return;
-  }
+  if (!value || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) !== 'object') return;
   var observer = void 0;
   if (Object.prototype.hasOwnProperty.call(value, OB_NAME) && value[OB_NAME] instanceof Observer) {
     observer = value[OB_NAME];
@@ -618,9 +627,7 @@ function defineReactive(object, key, value) {
   var dep = new Dep();
 
   var desc = Object.getOwnPropertyDescriptor(object, key);
-  if (desc && desc.configurable === false) {
-    return;
-  }
+  if (desc && desc.configurable === false) return;
 
   // cater for pre-defined getter/setters
   var getter = desc && desc.get;
@@ -646,9 +653,7 @@ function defineReactive(object, key, value) {
   }
   function reactiveSetter(newValue) {
     var oldValue = getter ? getter.call(object) : value;
-    if (newValue === oldValue) {
-      return;
-    }
+    if (newValue === oldValue) return;
     if (setter) {
       setter.call(object, newValue);
     } else {
