@@ -24,7 +24,6 @@ export default {
   banner:
 `/**
  * ob.js --- By lon
- * Github: https://github.com/cnlon/ob.js
- * MIT Licensed.
+ * https://github.com/cnlon/ob.js
  */`,
 }
