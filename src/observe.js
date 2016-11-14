@@ -15,56 +15,58 @@ import {OB_NAME} from './constants'
  * object's property keys into getter/setters that
  * collect dependencies and dispatches updates.
  *
+ * @class
  * @param {Array|Object} value
- * @constructor
  */
 
-function Observer (value) {
-  this.value = value
-  this.dep = new Dep()
-  def(value, OB_NAME, this)
-  if (isArray(value)) {
-    amendArray(value)
-    this.observeArray(value)
-  } else {
-    this.walk(value)
+class Observer {
+  constructor (value) {
+    this.value = value
+    this.dep = new Dep()
+    def(value, OB_NAME, this)
+    if (isArray(value)) {
+      amendArray(value)
+      this.observeArray(value)
+    } else {
+      this.walk(value)
+    }
   }
-}
 
-/**
- * Walk through each property and convert them into
- * getter/setters. This method should only be called when
- * value type is Object.
- *
- * @param {Object} object
- */
+  /**
+   * Walk through each property and convert them into
+   * getter/setters. This method should only be called when
+   * value type is Object.
+   *
+   * @param {Object} object
+   */
 
-Observer.prototype.walk = function (object) {
-  every(object, (key, value) => this.convert(key, value))
-}
-
-/**
- * Observe a list of Array items.
- *
- * @param {Array} items
- */
-
-Observer.prototype.observeArray = function (items) {
-  for (let i = 0, l = items.length; i < l; i++) {
-    observe(items[i])
+  walk (object) {
+    every(object, (key, value) => this.convert(key, value))
   }
-}
 
-/**
- * Convert a property into getter/setter so we can emit
- * the events when the property is accessed/changed.
- *
- * @param {String} key
- * @param {*} value
- */
+  /**
+   * Observe a list of Array items.
+   *
+   * @param {Array} items
+   */
 
-Observer.prototype.convert = function (key, value) {
-  defineReactive(this.value, key, value)
+  observeArray (items) {
+    for (let i = 0, l = items.length; i < l; i++) {
+      observe(items[i])
+    }
+  }
+
+  /**
+   * Convert a property into getter/setter so we can emit
+   * the events when the property is accessed/changed.
+   *
+   * @param {String} key
+   * @param {*} value
+   */
+
+  convert (key, value) {
+    defineReactive(this.value, key, value)
+  }
 }
 
 /**
@@ -77,9 +79,7 @@ Observer.prototype.convert = function (key, value) {
  */
 
 export function observe (value) {
-  if (!value || typeof value !== 'object') {
-    return
-  }
+  if (!value || typeof value !== 'object') return
   let observer
   if (
     Object.prototype.hasOwnProperty.call(value, OB_NAME)
@@ -107,9 +107,7 @@ export function defineReactive (object, key, value) {
   const dep = new Dep()
 
   const desc = Object.getOwnPropertyDescriptor(object, key)
-  if (desc && desc.configurable === false) {
-    return
-  }
+  if (desc && desc.configurable === false) return
 
   // cater for pre-defined getter/setters
   const getter = desc && desc.get
@@ -135,9 +133,7 @@ export function defineReactive (object, key, value) {
   }
   function reactiveSetter (newValue) {
     const oldValue = getter ? getter.call(object) : value
-    if (newValue === oldValue) {
-      return
-    }
+    if (newValue === oldValue) return
     if (setter) {
       setter.call(object, newValue)
     } else {
