@@ -4,18 +4,33 @@
   "description": "ob.js comes from vue.js and is used to observe/watch Object/Array/Class",
   "main": "dist/ob.js",
   "scripts": {
-    "test": "mocha",
-    "lint": "eslint src/**",
-    "clean": "rm -rf dist",
-    "rollup": "rollup --config --environment NODE_ENV:production --sourcemap",
+    "test": "$(npm bin)/mocha",
+    "lint": "$(npm bin)/eslint src",
+    "clean": "rm -rf dist/",
+    "rollup": "$(npm bin)/rollup --config --environment NODE_ENV:production --sourcemap",
+    "dev": "$(npm bin)/webpack-dev-server --config dev/webpack.config.js --content-base dev/ --inline --hot --port 3031",
     "prebuild": "npm run lint && npm run clean",
     "build": "npm run rollup && MIN=min npm run rollup",
-    "postbuild": "npm run test",
-    "dev": "webpack-dev-server --config dev/webpack.config.js --content-base dev/ --inline --hot --port 3031"
+    "postbuild": "npm run test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cnlon/ob.js.git"
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.1.0",
+    "babel-loader": "^6.2.7",
+    "babel-plugin-transform-class-properties": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015-rollup": "^1.2.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.10.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.3.2",
+    "eslint-plugin-standard": "^2.0.1",
+    "mocha": "^3.1.2",
+    "rollup": "^0.36.3",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-uglify": "^1.0.1",
+    "webpack": "^1.13.3",
+    "webpack-dev-server": "^1.16.2"
   },
   "keywords": [
     "ob.js",
@@ -28,29 +43,14 @@
     "vue",
     "vue.js"
   ],
-  "author": "longhaohe@gmail.com",
-  "license": "MIT",
-  "devDependencies": {
-    "babel-core": "^6.17.0",
-    "babel-eslint": "^7.0.0",
-    "babel-loader": "^6.2.5",
-    "babel-plugin-transform-class-properties": "^6.16.0",
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-es2015-rollup": "^1.2.0",
-    "chai": "^3.5.0",
-    "eslint": "^3.8.1",
-    "eslint-config-standard": "^6.2.0",
-    "eslint-plugin-promise": "^3.0.0",
-    "eslint-plugin-standard": "^2.0.1",
-    "mocha": "^3.1.2",
-    "rollup": "^0.36.3",
-    "rollup-plugin-babel": "^2.6.1",
-    "rollup-plugin-uglify": "^1.0.1",
-    "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.16.2"
+  "author": "lon <longhaohe@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cnlon/ob.js.git"
   },
   "bugs": {
     "url": "https://github.com/cnlon/ob.js/issues"
   },
-  "homepage": "https://github.com/cnlon/ob.js#readme"
+  "homepage": "https://github.com/cnlon/ob.js#readme",
+  "license": "MIT"
 }
