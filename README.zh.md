@@ -10,13 +10,13 @@
 
 ## 安装
 
-#### NPM
 ``` bash
 npm install --save ob.js
 ```
 
-#### Bower
-``` bash
+或
+
+```
 bower install --save ob.js
 ```
 

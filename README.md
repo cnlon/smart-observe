@@ -15,7 +15,8 @@ english | [中文](https://github.com/cnlon/ob.js/blob/master/README.zh.md)
 npm install --save ob.js
 ```
 
-#### Bower
+or
+
 ``` bash
 bower install --save ob.js
 ```
