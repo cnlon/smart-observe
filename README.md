@@ -32,12 +32,10 @@ Try it on:
 ``` javascript
 const target = {a: 1}
 ob(target, 'a', function (newValue, oldValue) {
-  console.log(`a: ${newValue}`)
-  console.log(newValue === this.a) // 'this' has bound to target
+  console.log(newValue, oldValue)
 })
 target.a = 3
-// a: 3
-// true
+// 3 1
 ```
 
 #### To add computed property. `ob.compute(target, name, getter)`
@@ -47,21 +45,15 @@ Try it on:
 [jsfiddle](https://jsfiddle.net/lon/q402v3jd/)
 
 ``` javascript
-class Claz {
-  constructor () {
-    this.a = 1
-    ob.compute(this, 'b', () => this.double(this.a)) // Be careful with 'this' when using arrow function
-  }
-  double (num) {
-    return num * 2
-  }
-}
-const target = new Claz()
-console.log(`b: ${target.b}`)
-// b: 2
+const target = {a: 1}
+ob.compute(target, 'b', function () {
+  return this.a * 2
+})
+console.log(target.b)
+// 2
 target.a = 3
-console.log(`b: ${target.b}`)
-// b: 6
+console.log(target.b)
+// 6
 ```
 
 #### To watch expressions and computed properties. `ob.react(options)`
@@ -74,11 +66,11 @@ Try it on:
 const options = {
   data: {
     PI: Math.PI,
-    radii: 1,
+    radius: 1,
   },
   computed: {
     'area': function () {
-      return this.PI * this.square(this.radii) // πr²
+      return this.PI * this.square(this.radius) // πr²
     },
   },
   watchers: {
@@ -93,7 +85,7 @@ const options = {
   },
 }
 const target = ob.react(options)
-target.radii = 3
+target.radius = 3
 // area: 28.274333882308138
 ```
 

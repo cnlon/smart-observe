@@ -4,11 +4,11 @@ window.onload = function () {
   const target = window.d = ob.react({
     data: {
       PI: Math.PI,
-      radii: 2,
+      radius: 2,
     },
     computed: {
       'area': function () {
-        return this.PI * this.square(this.radii)
+        return this.PI * this.square(this.radius)
       },
     },
     watchers: {
@@ -22,6 +22,6 @@ window.onload = function () {
       },
     },
   })
-  target.radii = 3
+  target.radius = 3
   console.dir(target)
 }

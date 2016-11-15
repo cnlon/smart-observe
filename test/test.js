@@ -39,11 +39,11 @@ describe('ob', function () {
       const target = ob.react({
         data: {
           PI: Math.PI,
-          radii: 1,
+          radius: 1,
         },
         computed: {
           'area': function () {
-            return this.PI * this.square(this.radii)
+            return this.PI * this.square(this.radius)
           },
         },
         watchers: {
@@ -58,7 +58,7 @@ describe('ob', function () {
           },
         },
       })
-      target.radii = 3
+      target.radius = 3
     })
   })
 })
