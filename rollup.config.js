@@ -2,8 +2,8 @@ import babel from 'rollup-plugin-babel'
 import uglify from 'rollup-plugin-uglify'
 
 const needMin = !!process.env.MIN
-var dest = 'dist/ob.js'
-var plugins = [
+let dest = 'dist/ob.js'
+const plugins = [
   babel({
     presets: ['es2015-rollup'],
     plugins: ['transform-class-properties'],

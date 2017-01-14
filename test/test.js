@@ -1,7 +1,7 @@
-var assert = require('chai').assert
-var ob = require('../dist/ob.js')
+const assert = require('chai').assert
+const ob = require('../dist/ob.js')
 
-var equal = assert.equal
+const equal = assert.equal
 
 /* global describe, it */
 describe('ob', function () {
