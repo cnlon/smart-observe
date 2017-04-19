@@ -1,4 +1,4 @@
-english | [中文](https://github.com/cnlon/ob.js/blob/master/README.zh.md)
+English | [中文](https://github.com/cnlon/ob.js/blob/master/README.zh.md)
 
 # ob.js
 
@@ -7,7 +7,7 @@ english | [中文](https://github.com/cnlon/ob.js/blob/master/README.zh.md)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 
-**ob.js** comes from [**vue.js**](https://github.com/vuejs/vue). It's a small, efficient library for observing changes to javascript Object, Array and Class.
+**ob.js** comes from [**Vue.js**](https://github.com/vuejs/vue). It's a small, efficient library for observing changes to javascript Object, Array and Class.
 
 ## Installation
 

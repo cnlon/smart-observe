@@ -1,4 +1,4 @@
-[english](https://github.com/cnlon/ob.js/blob/master/README.md) | 中文
+[English](https://github.com/cnlon/ob.js/blob/master/README.md) | 中文
 
 # ob.js
 
@@ -6,7 +6,7 @@
 [![npm version](https://badge.fury.io/js/ob.js.svg)](https://badge.fury.io/js/ob.js)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
-**ob.js** 来自 [**vue.js**](https://github.com/vuejs/vue)，是一个小巧、高效，用于监测 javascript 对象、数组、类 变化的库
+**ob.js** 来自 [**Vue.js**](https://github.com/vuejs/vue)，是一个小巧、高效，用于监测 javascript 对象、数组、类 变化的库
 
 ## 安装
 
