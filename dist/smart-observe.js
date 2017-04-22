@@ -514,6 +514,55 @@ function parse(expression) {
   return makeGetterFunction('scope.' + expression);
 }
 
+var callbacks = [];
+var pending = false;
+function nextTickHandler() {
+    pending = false;
+    var callbackCopies = callbacks.slice(0);
+    callbacks.length = 0;
+    for (var i = 0; i < callbackCopies.length; i++) {
+        callbackCopies[i]();
+    }
+}
+
+var callNextTick;
+if ((typeof process === 'undefined' ? 'undefined' : _typeof(process)) === 'object' && process && typeof process.nextTick === 'function') {
+    callNextTick = process.nextTick;
+} else if (typeof MutationObserver !== 'undefined') {
+    var counter = 0;
+    var textNode = document.createTextNode(counter);
+    var observer = new MutationObserver(nextTickHandler);
+    observer.observe(textNode, {
+        characterData: true
+    });
+    callNextTick = function callNextTick() {
+        counter = counter === 0 ? 1 : 0;
+        textNode.data = String(counter);
+    };
+} else {
+    callNextTick = setTimeout;
+}
+
+var nextTick = function nextTick(callback, context) {
+    var func = callback;
+    if (context) {
+        var args = [];
+        var l = arguments.length;
+        while (--l > 1) {
+            args.unshift(arguments[l]);
+        }
+        func = function func() {
+            callback.apply(context, args);
+        };
+    }
+    callbacks.push(func);
+    if (pending) {
+        return;
+    }
+    pending = true;
+    callNextTick(nextTickHandler);
+};
+
 var queue = [];
 var has = {};
 var waiting = false;
@@ -554,61 +603,6 @@ function runBatcherQueue(queue) {
     watcher.run();
   }
 }
-
-/**
- * Defer a task to execute it asynchronously. Ideally this
- * should be executed as a microtask, so we leverage
- * MutationObserver if it's available, and fallback to
- * setTimeout(0).
- *
- * @param {Function} callback
- * @param {Object} context
- */
-
-var nextTick = function () {
-  var callbacks = [];
-  var pending = false;
-  var timerFunction = void 0;
-  function nextTickHandler() {
-    pending = false;
-    var callbackCopies = callbacks.slice(0);
-    callbacks = [];
-    for (var i = 0; i < callbackCopies.length; i++) {
-      callbackCopies[i]();
-    }
-  }
-
-  if (typeof MutationObserver !== 'undefined') {
-    (function () {
-      var counter = 1;
-      /* global MutationObserver */
-      var observer = new MutationObserver(nextTickHandler);
-      /* global */
-      var textNode = document.createTextNode(counter);
-      observer.observe(textNode, { characterData: true });
-      timerFunction = function timerFunction() {
-        counter = (counter + 1) % 2;
-        textNode.data = counter;
-      };
-    })();
-  } else {
-    // webpack attempts to inject a shim for setImmediate
-    // if it is used as a global, so we have to work around that to
-    // avoid bundling unnecessary code.
-    var inBrowser = typeof window !== 'undefined' && Object.prototype.toString.call(window) !== '[object Object]';
-    var context = inBrowser ? window : typeof global !== 'undefined' ? global : {};
-    timerFunction = context.setImmediate || setTimeout;
-  }
-  return function (callback, context) {
-    var func = context ? function () {
-      callback.call(context);
-    } : callback;
-    callbacks.push(func);
-    if (pending) return;
-    pending = true;
-    timerFunction(nextTickHandler, 0);
-  };
-}();
 
 /**
  * Push a watcher into the watcher queue.

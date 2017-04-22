@@ -1,3 +1,5 @@
+import nextTick from 'smart-next-tick'
+
 let queue = []
 let has = {}
 let waiting = false
@@ -38,59 +40,6 @@ function runBatcherQueue (queue) {
     watcher.run()
   }
 }
-
-/**
- * Defer a task to execute it asynchronously. Ideally this
- * should be executed as a microtask, so we leverage
- * MutationObserver if it's available, and fallback to
- * setTimeout(0).
- *
- * @param {Function} callback
- * @param {Object} context
- */
-
-const nextTick = (function () {
-  let callbacks = []
-  let pending = false
-  let timerFunction
-  function nextTickHandler () {
-    pending = false
-    const callbackCopies = callbacks.slice(0)
-    callbacks = []
-    for (let i = 0; i < callbackCopies.length; i++) {
-      callbackCopies[i]()
-    }
-  }
-
-  if (typeof MutationObserver !== 'undefined') {
-    let counter = 1
-    /* global MutationObserver */
-    const observer = new MutationObserver(nextTickHandler)
-    /* global */
-    const textNode = document.createTextNode(counter)
-    observer.observe(textNode, {characterData: true})
-    timerFunction = function () {
-      counter = (counter + 1) % 2
-      textNode.data = counter
-    }
-  } else {
-    // webpack attempts to inject a shim for setImmediate
-    // if it is used as a global, so we have to work around that to
-    // avoid bundling unnecessary code.
-    const inBrowser = typeof window !== 'undefined'
-      && Object.prototype.toString.call(window) !== '[object Object]'
-    const context =
-      inBrowser ? window : typeof global !== 'undefined' ? global : {}
-    timerFunction = context.setImmediate || setTimeout
-  }
-  return function (callback, context) {
-    const func = context ? function () { callback.call(context) } : callback
-    callbacks.push(func)
-    if (pending) return
-    pending = true
-    timerFunction(nextTickHandler, 0)
-  }
-})()
 
 /**
  * Push a watcher into the watcher queue.
