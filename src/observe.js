@@ -1,11 +1,11 @@
 import Dep from './dep'
 import amendArray from './array'
 import {
-  def,
-  defi,
+  defineValue,
+  defineAccessor,
   isArray,
   isPlainObject,
-  every,
+  everyEntries,
 } from './util'
 import {OB_NAME} from './constants'
 
@@ -23,7 +23,7 @@ class Observer {
   constructor (value) {
     this.value = value
     this.dep = new Dep()
-    def(value, OB_NAME, this)
+    defineValue(value, OB_NAME, this)
     if (isArray(value)) {
       amendArray(value)
       this.observeArray(value)
@@ -41,7 +41,7 @@ class Observer {
    */
 
   walk (object) {
-    every(object, (key, value) => this.convert(key, value))
+    everyEntries(object, (key, value) => this.convert(key, value))
   }
 
   /**
@@ -142,5 +142,5 @@ export function defineReactive (object, key, value) {
     childOb = observe(newValue)
     dep.notify()
   }
-  defi(object, key, reactiveGetter, reactiveSetter)
+  defineAccessor(object, key, reactiveGetter, reactiveSetter)
 }

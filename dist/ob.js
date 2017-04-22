@@ -53,8 +53,6 @@ var uid = 0;
 /**
  * A dep is an observable that can have multiple
  * watcher subscribing to it.
- *
- * @constructor
  */
 
 var Dep = function () {
@@ -126,7 +124,7 @@ var OB_NAME = '__ob__';
 var WATCHERS_PROPERTY_NAME = '__watchers__';
 var DATA_PROPTERTY_NAME = '__data__';
 
-var IS_DEBUG = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production';
+var DEBUGGING = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production';
 
 /**
  * Define property with value.
@@ -137,7 +135,7 @@ var IS_DEBUG = typeof process !== 'undefined' && process.env.NODE_ENV !== 'produ
  * @param {Boolean} [enumerable]
  */
 
-function def(object, property, value, enumerable) {
+function defineValue(object, property, value, enumerable) {
   Object.defineProperty(object, property, {
     value: value,
     enumerable: !!enumerable,
@@ -155,12 +153,12 @@ function def(object, property, value, enumerable) {
  * @param {Function} setter
  */
 
-function defi(object, property, getter, setter) {
+function defineAccessor(object, property, getter, setter) {
   Object.defineProperty(object, property, {
     get: getter,
     set: setter,
-    configurable: true,
-    enumerable: true
+    enumerable: true,
+    configurable: true
   });
 }
 
@@ -202,22 +200,22 @@ function isObject(object) {
 /**
  * Function type check
  *
- * @param {*} fun
+ * @param {*} func
  * @param {Boolean}
  */
 
-function isFunction(fun) {
-  return typeof fun === 'function';
+function isFunction(func) {
+  return typeof func === 'function';
 }
 
 /**
  * Iterate object
  *
  * @param {Object} object
- * @param {Function} cb
+ * @param {Function} callback
  */
 
-function every(object, callback) {
+function everyEntries(object, callback) {
   var keys = Object.keys(object);
   for (var i = 0, l = keys.length; i < l; i++) {
     callback(keys[i], object[keys[i]]);
@@ -234,10 +232,9 @@ function noop() {}
  * @param {String} string
  */
 
-var warn = IS_DEBUG && console && isFunction(console.warn) ? console.warn : noop;
+var warn = (typeof DEBUGGING === 'undefined' ? 'undefined' : _typeof(DEBUGGING)) !== undefined && DEBUGGING && typeof console !== 'undefined' && console && isFunction(console.warn) ? console.warn : noop;
 
 var _Set = void 0;
-/* istanbul ignore if */
 if (typeof Set !== 'undefined' && Set.toString().match(/native code/)) {
   // use native Set when available.
   _Set = Set;
@@ -278,7 +275,7 @@ function amend(array) {
 var _loop = function _loop(i, l, method) {
   // cache original method
   var original = arrayPrototype[method];
-  def(arrayMethods, method, function mutator() {
+  defineValue(arrayMethods, method, function mutator() {
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
@@ -322,24 +319,24 @@ function $set(index, value) {
   }
   return this.splice(index, 1, value)[0];
 }
-def(arrayPrototype, '$set', $set);
+defineValue(arrayPrototype, '$set', $set);
 
 /**
  * Convenience method to remove the element at given index
  * or target element reference.
  *
  * @param {*} item
+ * @return {*} - removed element
  */
 
 function $remove(item) {
-  /* istanbul ignore if */
   if (!this.length) return;
   var index = this.indexOf(item);
   if (index > -1) {
     return this.splice(index, 1);
   }
 }
-def(arrayPrototype, '$remove', $remove);
+defineValue(arrayPrototype, '$remove', $remove);
 
 /**
  * Observer class that are attached to each observed
@@ -357,7 +354,7 @@ var Observer = function () {
 
     this.value = value;
     this.dep = new Dep();
-    def(value, OB_NAME, this);
+    defineValue(value, OB_NAME, this);
     if (isArray(value)) {
       amend(value);
       this.observeArray(value);
@@ -379,7 +376,7 @@ var Observer = function () {
     value: function walk(object) {
       var _this = this;
 
-      every(object, function (key, value) {
+      everyEntries(object, function (key, value) {
         return _this.convert(key, value);
       });
     }
@@ -482,7 +479,7 @@ function defineReactive(object, key, value) {
     childOb = observe(newValue);
     dep.notify();
   }
-  defi(object, key, reactiveGetter, reactiveSetter);
+  defineAccessor(object, key, reactiveGetter, reactiveSetter);
 }
 
 /**
@@ -581,20 +578,17 @@ var nextTick = function () {
     }
   }
 
-  /* istanbul ignore if */
   if (typeof MutationObserver !== 'undefined') {
-    (function () {
-      var counter = 1;
-      /* global MutationObserver */
-      var observer = new MutationObserver(nextTickHandler);
-      /* global */
-      var textNode = document.createTextNode(counter);
-      observer.observe(textNode, { characterData: true });
-      timerFunction = function timerFunction() {
-        counter = (counter + 1) % 2;
-        textNode.data = counter;
-      };
-    })();
+    var counter = 1;
+    /* global MutationObserver */
+    var observer = new MutationObserver(nextTickHandler);
+    /* global */
+    var textNode = document.createTextNode(counter);
+    observer.observe(textNode, { characterData: true });
+    timerFunction = function timerFunction() {
+      counter = (counter + 1) % 2;
+      textNode.data = counter;
+    };
   } else {
     // webpack attempts to inject a shim for setImmediate
     // if it is used as a global, so we have to work around that to
@@ -604,10 +598,10 @@ var nextTick = function () {
     timerFunction = context.setImmediate || setTimeout;
   }
   return function (callback, context) {
-    var fun = context ? function () {
+    var func = context ? function () {
       callback.call(context);
     } : callback;
-    callbacks.push(fun);
+    callbacks.push(func);
     if (pending) return;
     pending = true;
     timerFunction(nextTickHandler, 0);
@@ -920,16 +914,16 @@ Object.setPrototypeOf(ob, { react: react, compute: compute, watch: watch$$1 });
  * @public
  * @param {Object} target
  * @param {*} [expression]
- * @param {*} [fun]
+ * @param {*} [func]
  * @param {*} [options]
  * @return {Function} ob
  */
 
-function ob(target, expression, fun, options) {
+function ob(target, expression, func, options) {
   if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
     init(target);
   }
-  return ob.default(target, expression, fun, options);
+  return ob.default(target, expression, func, options);
 }
 
 /**
@@ -985,7 +979,7 @@ function compute(target, name, getterOrAccessor, cache) {
     getter = getterOrAccessor.get ? getterOrAccessor.cache !== false || cache !== false ? makeComputed(target, getterOrAccessor.get) : getterOrAccessor.get.bind(this) : noop;
     setter = getterOrAccessor.set ? getterOrAccessor.set.bind(this) : noop;
   }
-  defi(target, name, getter, setter);
+  defineAccessor(target, name, getter, setter);
 }
 
 /**
@@ -1017,8 +1011,8 @@ function watch$$1(target, expressionOrFunction, callback) {
  */
 
 function init(target) {
-  def(target, WATCHERS_PROPERTY_NAME, [], false);
-  def(target, DATA_PROPTERTY_NAME, Object.create(null), false);
+  defineValue(target, WATCHERS_PROPERTY_NAME, [], false);
+  defineValue(target, DATA_PROPTERTY_NAME, Object.create(null), false);
   observe(target[DATA_PROPTERTY_NAME]);
   reactSelfProperties(target);
 }
@@ -1030,7 +1024,7 @@ function init(target) {
  */
 
 function carryMethods(target, methods) {
-  every(methods, function (name, method) {
+  everyEntries(methods, function (name, method) {
     target[name] = method.bind(target);
   });
 }
@@ -1041,6 +1035,7 @@ function carryMethods(target, methods) {
  * @param {String} key
  * @param {*} value
  */
+
 function reactProperty(target, key, value) {
   target[DATA_PROPTERTY_NAME][key] = value;
   defineReactive(target[DATA_PROPTERTY_NAME], key, value);
@@ -1054,7 +1049,7 @@ function reactProperty(target, key, value) {
  */
 
 function reactProperties(target, properties) {
-  every(properties, function (key, value) {
+  everyEntries(properties, function (key, value) {
     return reactProperty(target, key, value);
   });
 }
@@ -1065,7 +1060,7 @@ function reactProperties(target, properties) {
  */
 
 function reactSelfProperties(target) {
-  every(target, function (key, value) {
+  everyEntries(target, function (key, value) {
     !isFunction(value) && reactProperty(target, key, value);
   });
 }
@@ -1077,7 +1072,7 @@ function reactSelfProperties(target) {
  */
 
 function computeProperties(target, properties) {
-  every(properties, function (key, value) {
+  everyEntries(properties, function (key, value) {
     return compute(target, key, value);
   });
 }
@@ -1089,7 +1084,7 @@ function computeProperties(target, properties) {
  */
 
 function watchProperties(target, properties) {
-  every(properties, function (expression, functionOrOption) {
+  everyEntries(properties, function (expression, functionOrOption) {
     if (isFunction(functionOrOption)) {
       watch$$1(target, expression, functionOrOption);
     } else {
@@ -1111,7 +1106,7 @@ function proxy(target, key) {
   function setter(value) {
     target[DATA_PROPTERTY_NAME][key] = value;
   }
-  defi(target, key, getter, setter);
+  defineAccessor(target, key, getter, setter);
 }
 
 return ob;

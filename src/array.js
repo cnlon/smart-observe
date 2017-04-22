@@ -1,4 +1,4 @@
-import {def} from './util'
+import {defineValue} from './util'
 import {OB_NAME} from './constants'
 
 const arrayPrototype = Array.prototype
@@ -34,7 +34,7 @@ for (
 ) {
   // cache original method
   const original = arrayPrototype[method]
-  def(arrayMethods, method, function mutator (...args) {
+  defineValue(arrayMethods, method, function mutator (...args) {
     const result = original.apply(this, args)
     const ob = this[OB_NAME]
     let inserted
@@ -50,7 +50,7 @@ for (
         break
     }
     if (inserted) ob.observeArray(inserted)
-    ob.dep.notify()  // notify change
+    ob.dep.notify() // notify change
     return result
   })
 }
@@ -70,21 +70,21 @@ function $set (index, value) {
   }
   return this.splice(index, 1, value)[0]
 }
-def(arrayPrototype, '$set', $set)
+defineValue(arrayPrototype, '$set', $set)
 
 /**
  * Convenience method to remove the element at given index
  * or target element reference.
  *
  * @param {*} item
+ * @return {*} - removed element
  */
 
 function $remove (item) {
-  /* istanbul ignore if */
   if (!this.length) return
   const index = this.indexOf(item)
   if (index > -1) {
     return this.splice(index, 1)
   }
 }
-def(arrayPrototype, '$remove', $remove)
+defineValue(arrayPrototype, '$remove', $remove)

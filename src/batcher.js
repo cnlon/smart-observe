@@ -62,7 +62,6 @@ const nextTick = (function () {
     }
   }
 
-  /* istanbul ignore if */
   if (typeof MutationObserver !== 'undefined') {
     let counter = 1
     /* global MutationObserver */
@@ -85,8 +84,8 @@ const nextTick = (function () {
     timerFunction = context.setImmediate || setTimeout
   }
   return function (callback, context) {
-    const fun = context ? function () { callback.call(context) } : callback
-    callbacks.push(fun)
+    const func = context ? function () { callback.call(context) } : callback
+    callbacks.push(func)
     if (pending) return
     pending = true
     timerFunction(nextTickHandler, 0)

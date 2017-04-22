@@ -3,8 +3,6 @@ let uid = 0
 /**
  * A dep is an observable that can have multiple
  * watcher subscribing to it.
- *
- * @constructor
  */
 
 export default class Dep {

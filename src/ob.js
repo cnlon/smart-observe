@@ -7,11 +7,11 @@ import {
   makeComputed,
 } from './watcher'
 import {
-  def,
-  defi,
+  defineValue,
+  defineAccessor,
   noop,
   isFunction,
-  every,
+  everyEntries,
 } from './util'
 import {
   WATCHERS_PROPERTY_NAME,
@@ -30,16 +30,16 @@ Object.setPrototypeOf(ob, {react, compute, watch})
  * @public
  * @param {Object} target
  * @param {*} [expression]
- * @param {*} [fun]
+ * @param {*} [func]
  * @param {*} [options]
  * @return {Function} ob
  */
 
-export default function ob (target, expression, fun, options) {
+export default function ob (target, expression, func, options) {
   if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
     init(target)
   }
-  return ob.default(target, expression, fun, options)
+  return ob.default(target, expression, func, options)
 }
 
 /**
@@ -100,7 +100,7 @@ function compute (target, name, getterOrAccessor, cache) {
             : noop
     setter = getterOrAccessor.set ? getterOrAccessor.set.bind(this) : noop
   }
-  defi(target, name, getter, setter)
+  defineAccessor(target, name, getter, setter)
 }
 
 /**
@@ -130,8 +130,8 @@ function watch (target, expressionOrFunction, callback, options = ob) {
  */
 
 function init (target) {
-  def(target, WATCHERS_PROPERTY_NAME, [], false)
-  def(target, DATA_PROPTERTY_NAME, Object.create(null), false)
+  defineValue(target, WATCHERS_PROPERTY_NAME, [], false)
+  defineValue(target, DATA_PROPTERTY_NAME, Object.create(null), false)
   observe(target[DATA_PROPTERTY_NAME])
   reactSelfProperties(target)
 }
@@ -143,7 +143,7 @@ function init (target) {
  */
 
 function carryMethods (target, methods) {
-  every(methods, (name, method) => {
+  everyEntries(methods, (name, method) => {
     target[name] = method.bind(target)
   })
 }
@@ -154,6 +154,7 @@ function carryMethods (target, methods) {
  * @param {String} key
  * @param {*} value
  */
+
 function reactProperty (target, key, value) {
   target[DATA_PROPTERTY_NAME][key] = value
   defineReactive(target[DATA_PROPTERTY_NAME], key, value)
@@ -167,7 +168,7 @@ function reactProperty (target, key, value) {
  */
 
 function reactProperties (target, properties) {
-  every(properties, (key, value) => reactProperty(target, key, value))
+  everyEntries(properties, (key, value) => reactProperty(target, key, value))
 }
 
 /**
@@ -176,7 +177,7 @@ function reactProperties (target, properties) {
  */
 
 function reactSelfProperties (target) {
-  every(target, (key, value) => {
+  everyEntries(target, (key, value) => {
     !isFunction(value) && reactProperty(target, key, value)
   })
 }
@@ -188,7 +189,7 @@ function reactSelfProperties (target) {
  */
 
 function computeProperties (target, properties) {
-  every(properties, (key, value) => compute(target, key, value))
+  everyEntries(properties, (key, value) => compute(target, key, value))
 }
 
 /**
@@ -198,7 +199,7 @@ function computeProperties (target, properties) {
  */
 
 function watchProperties (target, properties) {
-  every(properties, (expression, functionOrOption) => {
+  everyEntries(properties, (expression, functionOrOption) => {
     if (isFunction(functionOrOption)) {
       watch(target, expression, functionOrOption)
     } else {
@@ -220,5 +221,5 @@ function proxy (target, key) {
   function setter (value) {
     target[DATA_PROPTERTY_NAME][key] = value
   }
-  defi(target, key, getter, setter)
+  defineAccessor(target, key, getter, setter)
 }

@@ -1,4 +1,4 @@
-import {IS_DEBUG} from './constants'
+import {DEBUGGING} from './constants'
 
 /**
  * Define property with value.
@@ -9,7 +9,7 @@ import {IS_DEBUG} from './constants'
  * @param {Boolean} [enumerable]
  */
 
-export function def (object, property, value, enumerable) {
+export function defineValue (object, property, value, enumerable) {
   Object.defineProperty(object, property, {
     value,
     enumerable: !!enumerable,
@@ -27,12 +27,12 @@ export function def (object, property, value, enumerable) {
  * @param {Function} setter
  */
 
-export function defi (object, property, getter, setter) {
+export function defineAccessor (object, property, getter, setter) {
   Object.defineProperty(object, property, {
     get: getter,
     set: setter,
-    configurable: true,
     enumerable: true,
+    configurable: true,
   })
 }
 
@@ -74,22 +74,22 @@ export function isObject (object) {
 /**
  * Function type check
  *
- * @param {*} fun
+ * @param {*} func
  * @param {Boolean}
  */
 
-export function isFunction (fun) {
-  return typeof fun === 'function'
+export function isFunction (func) {
+  return typeof func === 'function'
 }
 
 /**
  * Iterate object
  *
  * @param {Object} object
- * @param {Function} cb
+ * @param {Function} callback
  */
 
-export function every (object, callback) {
+export function everyEntries (object, callback) {
   const keys = Object.keys(object)
   for (let i = 0, l = keys.length; i < l; i++) {
     callback(keys[i], object[keys[i]])
@@ -106,15 +106,13 @@ export function noop () {}
  * @param {String} string
  */
 
-export const warn =
-  IS_DEBUG
-  && console
+export const warn = typeof DEBUGGING !== undefined && DEBUGGING
+  && typeof console !== 'undefined' && console
   && isFunction(console.warn)
     ? console.warn
     : noop
 
 export let _Set
-/* istanbul ignore if */
 if (typeof Set !== 'undefined' && Set.toString().match(/native code/)) {
   // use native Set when available.
   _Set = Set
