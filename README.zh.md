@@ -135,4 +135,4 @@ target.radius = 3
 
 ## License
 
-[MIT](http://opensource.org/licenses/MIT)
+[MIT](https://github.com/cnlon/smart-observe/blob/master/LICENSE)
