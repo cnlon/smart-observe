@@ -7,7 +7,7 @@ import {
   isPlainObject,
   everyEntries,
 } from './util'
-import {OB_NAME} from './constants'
+import {OBSERVE_NAME} from './constants'
 
 /**
  * Observer class that are attached to each observed
@@ -23,7 +23,7 @@ class Observer {
   constructor (value) {
     this.value = value
     this.dep = new Dep()
-    defineValue(value, OB_NAME, this)
+    defineValue(value, OBSERVE_NAME, this)
     if (isArray(value)) {
       amendArray(value)
       this.observeArray(value)
@@ -82,10 +82,10 @@ export function observe (value) {
   if (!value || typeof value !== 'object') return
   let observer
   if (
-    Object.prototype.hasOwnProperty.call(value, OB_NAME)
-    && value[OB_NAME] instanceof Observer
+    Object.prototype.hasOwnProperty.call(value, OBSERVE_NAME)
+    && value[OBSERVE_NAME] instanceof Observer
   ) {
-    observer = value[OB_NAME]
+    observer = value[OBSERVE_NAME]
   } else if (
     (isArray(value) || isPlainObject(value))
     && Object.isExtensible(value)
@@ -125,7 +125,7 @@ export function defineReactive (object, key, value) {
       if (isArray(currentValue)) {
         for (let i = 0, l = currentValue.length, e; i < l; i++) {
           e = currentValue[i]
-          e && e[OB_NAME] && e[OB_NAME].dep.depend()
+          e && e[OBSERVE_NAME] && e[OBSERVE_NAME].dep.depend()
         }
       }
     }

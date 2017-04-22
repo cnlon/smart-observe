@@ -1,8 +1,8 @@
 {
-  "name": "ob.js",
+  "name": "smart-observe",
   "version": "0.2.5",
-  "description": "ob.js comes from vue.js and is used to observe/watch Object/Array/Class",
-  "main": "dist/ob.js",
+  "description": "smart-observe comes from vue.js and is used to observe/watch Object/Array/Class",
+  "main": "dist/smart-observe.js",
   "scripts": {
     "test": "$(npm bin)/mocha",
     "lint": "$(npm bin)/eslint src",
@@ -33,24 +33,24 @@
     "webpack-dev-server": "^1.16.2"
   },
   "keywords": [
-    "ob.js",
-    "ob",
     "observe",
     "observer",
     "watch",
     "watcher",
     "computed",
     "vue",
-    "vue.js"
+    "vue.js",
+    "ob.js",
+    "ob"
   ],
-  "author": "lon <longhaohe@gmail.com>",
+  "author": "lon <longhaohe@gmail.com> (http://lon.im)",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cnlon/ob.js.git"
+    "url": "git+https://github.com/cnlon/smart-observe.git"
   },
   "bugs": {
-    "url": "https://github.com/cnlon/ob.js/issues"
+    "url": "https://github.com/cnlon/smart-observe/issues"
   },
-  "homepage": "https://github.com/cnlon/ob.js#readme",
-  "license": "MIT"
+  "homepage": "https://github.com/cnlon/smart-observe#readme"
 }

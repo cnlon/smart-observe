@@ -24,7 +24,7 @@ const config = {
   devtool: 'eval',
   resolve: {
     alias: {
-      'ob.js': path.resolve(__dirname, '../src/index.js'),
+      'smart-observe': path.resolve(__dirname, '../src/index.js'),
     },
   },
 }

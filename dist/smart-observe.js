@@ -1,11 +1,11 @@
 /**
- * ob.js --- By lon
- * https://github.com/cnlon/ob.js
+ * smart-observe --- By lon
+ * https://github.com/cnlon/smart-observe
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define('ob', factory) :
-	(global.ob = factory());
+	typeof define === 'function' && define.amd ? define('observe', factory) :
+	(global.observe = factory());
 }(this, (function () { 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -120,7 +120,7 @@ var Dep = function () {
 
 Dep.target = null;
 
-var OB_NAME = '__ob__';
+var OBSERVE_NAME = '__s_o__';
 var WATCHERS_PROPERTY_NAME = '__watchers__';
 var DATA_PROPTERTY_NAME = '__data__';
 
@@ -281,7 +281,7 @@ var _loop = function _loop(i, l, method) {
     }
 
     var result = original.apply(this, args);
-    var ob = this[OB_NAME];
+    var observer = this[OBSERVE_NAME];
     var inserted = void 0;
     switch (method) {
       case 'push':
@@ -294,8 +294,8 @@ var _loop = function _loop(i, l, method) {
         inserted = args.slice(2);
         break;
     }
-    if (inserted) ob.observeArray(inserted);
-    ob.dep.notify(); // notify change
+    if (inserted) observer.observeArray(inserted);
+    observer.dep.notify(); // notify change
     return result;
   });
 };
@@ -354,7 +354,7 @@ var Observer = function () {
 
     this.value = value;
     this.dep = new Dep();
-    defineValue(value, OB_NAME, this);
+    defineValue(value, OBSERVE_NAME, this);
     if (isArray(value)) {
       amend(value);
       this.observeArray(value);
@@ -391,7 +391,7 @@ var Observer = function () {
     key: 'observeArray',
     value: function observeArray(items) {
       for (var i = 0, l = items.length; i < l; i++) {
-        observe(items[i]);
+        observe$1(items[i]);
       }
     }
 
@@ -421,11 +421,11 @@ var Observer = function () {
  * @return {Observer|undefined}
  */
 
-function observe(value) {
+function observe$1(value) {
   if (!value || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) !== 'object') return;
   var observer = void 0;
-  if (Object.prototype.hasOwnProperty.call(value, OB_NAME) && value[OB_NAME] instanceof Observer) {
-    observer = value[OB_NAME];
+  if (Object.prototype.hasOwnProperty.call(value, OBSERVE_NAME) && value[OBSERVE_NAME] instanceof Observer) {
+    observer = value[OBSERVE_NAME];
   } else if ((isArray(value) || isPlainObject(value)) && Object.isExtensible(value)) {
     observer = new Observer(value);
   }
@@ -450,7 +450,7 @@ function defineReactive(object, key, value) {
   var getter = desc && desc.get;
   var setter = desc && desc.set;
 
-  var childOb = observe(value);
+  var childOb = observe$1(value);
 
   function reactiveGetter() {
     var currentValue = getter ? getter.call(object) : value;
@@ -462,7 +462,7 @@ function defineReactive(object, key, value) {
       if (isArray(currentValue)) {
         for (var i = 0, l = currentValue.length, e; i < l; i++) {
           e = currentValue[i];
-          e && e[OB_NAME] && e[OB_NAME].dep.depend();
+          e && e[OBSERVE_NAME] && e[OBSERVE_NAME].dep.depend();
         }
       }
     }
@@ -476,7 +476,7 @@ function defineReactive(object, key, value) {
     } else {
       value = newValue;
     }
-    childOb = observe(newValue);
+    childOb = observe$1(newValue);
     dep.notify();
   }
   defineAccessor(object, key, reactiveGetter, reactiveSetter);
@@ -579,16 +579,18 @@ var nextTick = function () {
   }
 
   if (typeof MutationObserver !== 'undefined') {
-    var counter = 1;
-    /* global MutationObserver */
-    var observer = new MutationObserver(nextTickHandler);
-    /* global */
-    var textNode = document.createTextNode(counter);
-    observer.observe(textNode, { characterData: true });
-    timerFunction = function timerFunction() {
-      counter = (counter + 1) % 2;
-      textNode.data = counter;
-    };
+    (function () {
+      var counter = 1;
+      /* global MutationObserver */
+      var observer = new MutationObserver(nextTickHandler);
+      /* global */
+      var textNode = document.createTextNode(counter);
+      observer.observe(textNode, { characterData: true });
+      timerFunction = function timerFunction() {
+        counter = (counter + 1) % 2;
+        textNode.data = counter;
+      };
+    })();
   } else {
     // webpack attempts to inject a shim for setImmediate
     // if it is used as a global, so we have to work around that to
@@ -878,9 +880,9 @@ function watch$1(owner, expressionOrFunction, callback, options) {
 
 function makeComputed(owner, getter) {
   var watcher = new Watcher(owner, getter, null, {
-    deep: ob.deep,
+    deep: observe$$1.deep,
     lazy: true,
-    sync: ob.sync
+    sync: observe$$1.sync
   });
   return function computedGetter() {
     if (watcher.options.lazy && Dep.target && !Dep.target.options.lazy) {
@@ -903,27 +905,27 @@ function makeComputed(owner, getter) {
 }
 
 // Only could be react, compute or watch
-ob.default = watch$$1;
-ob.deep = ob.lazy = ob.sync = false;
+observe$$1.default = watch$$1;
+observe$$1.deep = observe$$1.lazy = observe$$1.sync = false;
 
-Object.setPrototypeOf(ob, { react: react, compute: compute, watch: watch$$1 });
+Object.setPrototypeOf(observe$$1, { react: react, compute: compute, watch: watch$$1 });
 
 /**
- * ob
+ * observe
  *
  * @public
  * @param {Object} target
  * @param {*} [expression]
  * @param {*} [func]
  * @param {*} [options]
- * @return {Function} ob
+ * @return {Function} observe
  */
 
-function ob(target, expression, func, options) {
+function observe$$1(target, expression, func, options) {
   if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
     init(target);
   }
-  return ob.default(target, expression, func, options);
+  return observe$$1.default(target, expression, func, options);
 }
 
 /**
@@ -932,7 +934,7 @@ function ob(target, expression, func, options) {
  * @public
  * @param {Object} options
  * @param {Object} [target]
- * @return {Function} ob
+ * @return {Function} observe
  */
 
 function react(options, target) {
@@ -997,7 +999,7 @@ function compute(target, name, getterOrAccessor, cache) {
  */
 
 function watch$$1(target, expressionOrFunction, callback) {
-  var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ob;
+  var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : observe$$1;
 
   if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
     init(target);
@@ -1013,7 +1015,7 @@ function watch$$1(target, expressionOrFunction, callback) {
 function init(target) {
   defineValue(target, WATCHERS_PROPERTY_NAME, [], false);
   defineValue(target, DATA_PROPTERTY_NAME, Object.create(null), false);
-  observe(target[DATA_PROPTERTY_NAME]);
+  observe$1(target[DATA_PROPTERTY_NAME]);
   reactSelfProperties(target);
 }
 
@@ -1109,7 +1111,7 @@ function proxy(target, key) {
   defineAccessor(target, key, getter, setter);
 }
 
-return ob;
+return observe$$1;
 
 })));
-//# sourceMappingURL=ob.js.map
+//# sourceMappingURL=smart-observe.js.map

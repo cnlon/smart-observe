@@ -1,4 +1,4 @@
-export const OB_NAME = '__ob__'
+export const OBSERVE_NAME = '__s_o__'
 export const WATCHERS_PROPERTY_NAME = '__watchers__'
 export const DATA_PROPTERTY_NAME = '__data__'
 

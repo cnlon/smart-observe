@@ -1,23 +1,23 @@
 {
-  "name": "ob.js",
-  "description": "ob.js comes from vue.js and is used to observe/watch Object/Array/Class",
-  "main": "dist/ob.js",
-  "authors": [
-    "longhaohe@gmail.com"
-  ],
-  "license": "MIT",
+  "name": "smart-observe",
+  "description": "smart-observe comes from vue.js and is used to observe/watch Object/Array/Class",
+  "main": "dist/smart-observe.js",
   "keywords": [
-    "ob.js",
-    "ob",
     "observe",
     "observer",
     "watch",
     "watcher",
     "computed",
     "vue",
-    "vue.js"
+    "vue.js",
+    "ob.js",
+    "ob"
   ],
-  "homepage": "https://github.com/cnlon/ob.js",
+  "authors": [
+    "lon <longhaohe@gmail.com> (http://lon.im)"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cnlon/smart-observe",
   "ignore": [
     "**/.*",
     "node_modules",

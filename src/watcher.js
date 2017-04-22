@@ -1,4 +1,4 @@
-import ob from './ob.js'
+import observe from './index'
 import Dep from './dep'
 import parseExpression from './expression'
 import batch from './batcher'
@@ -235,9 +235,9 @@ export function watch (owner, expressionOrFunction, callback, options) {
 
 export function makeComputed (owner, getter) {
   const watcher = new Watcher(owner, getter, null, {
-    deep: ob.deep,
+    deep: observe.deep,
     lazy: true,
-    sync: ob.sync,
+    sync: observe.sync,
   })
   return function computedGetter () {
     if (watcher.options.lazy && Dep.target && !Dep.target.options.lazy) {

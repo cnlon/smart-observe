@@ -1,29 +1,29 @@
-English | [中文](https://github.com/cnlon/ob.js/blob/master/README.zh.md)
+English | [中文](https://github.com/cnlon/smart-observe/blob/master/README.zh.md)
 
-# ob.js
+# smart-observe
 
-[![Build Status](https://travis-ci.org/cnlon/ob.js.svg?branch=master)](https://travis-ci.org/cnlon/ob.js)
-[![npm version](https://badge.fury.io/js/ob.js.svg)](https://badge.fury.io/js/ob.js)
+[![Build Status](https://travis-ci.org/cnlon/smart-observe.svg?branch=master)](https://travis-ci.org/cnlon/smart-observe)
+[![npm version](https://badge.fury.io/js/smart-observe.svg)](https://badge.fury.io/js/smart-observe)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 
-**ob.js** comes from [**Vue.js**](https://github.com/vuejs/vue). It's a small, efficient library for observing changes to javascript Object, Array and Class.
+**smart-observe** comes from [**Vue.js**](https://github.com/vuejs/vue). It's a small, efficient library for observing changes to javascript Object, Array and Class.
 
 ## Installation
 
 ``` bash
-npm install --save ob.js
+npm install --save smart-observe
 ```
 
 or
 
 ``` bash
-bower install --save ob.js
+bower install --save smart-observe
 ```
 
 ## Usage
 
-#### To watch expression. `ob.watch(target, expression, callback)` or `ob(target, expression, callback)`
+#### To watch expression. `observe.watch(target, expression, callback)` or `observe(target, expression, callback)`
 
 Try it on:
 [codepen](http://codepen.io/lon/pen/rrqLLk?editors=0010#0)
@@ -31,14 +31,14 @@ Try it on:
 
 ``` javascript
 const target = {a: 1}
-ob(target, 'a', function (newValue, oldValue) {
+observe(target, 'a', function (newValue, oldValue) {
   console.log(newValue, oldValue)
 })
 target.a = 3
 // 3 1
 ```
 
-#### To add computed property. `ob.compute(target, name, getter)`
+#### To add computed property. `observe.compute(target, name, getter)`
 
 Try it on:
 [codepen](http://codepen.io/lon/pen/dpgXLN?editors=0010#0)
@@ -46,7 +46,7 @@ Try it on:
 
 ``` javascript
 const target = {a: 1}
-ob.compute(target, 'b', function () {
+observe.compute(target, 'b', function () {
   return this.a * 2
 })
 console.log(target.b)
@@ -56,7 +56,7 @@ console.log(target.b)
 // 6
 ```
 
-#### To watch expressions and computed properties. `ob.react(options)`
+#### To watch expressions and computed properties. `observe.react(options)`
 
 Try it on:
 [codepen](http://codepen.io/lon/pen/zKmKqA?editors=0010#0)
@@ -84,7 +84,7 @@ const options = {
     },
   },
 }
-const target = ob.react(options)
+const target = observe.react(options)
 target.radius = 3
 // area: 28.274333882308138
 ```
@@ -95,24 +95,24 @@ target.radius = 3
 
 | name | type | value | detail |
 | --- | --- | --- | --- |
-| `ob.deep` | `Boolean` | The default is `false` | If `true`, `ob.watch(target, expression, callback)` will observe `target` deeply |
-| `ob.sync` | `Boolean` | The default is `false` | If `true`, `ob.watch(target, expression, callback)` will invoke callback immediately when a property change is detected |
-| `ob.default` | `Function` | Could only be one of `ob.react`, `ob.watch` and `ob.compute`. The default is `ob.watch` | Set actual method to `ob.default` for `ob(...)` |
+| `observe.deep` | `Boolean` | The default is `false` | If `true`, `observe.watch(target, expression, callback)` will observe `target` deeply |
+| `observe.sync` | `Boolean` | The default is `false` | If `true`, `observe.watch(target, expression, callback)` will invoke callback immediately when a property change is detected |
+| `observe.default` | `Function` | Could only be one of `observe.react`, `observe.watch` and `observe.compute`. The default is `observe.watch` | Set actual method to `observe.default` for `observe(...)` |
 
 #### methods
 
-**`ob(...)`**
+**`observe(...)`**
 
-- It's syntactic sugar of `ob.default`. See 'properties' for details
+- It's syntactic sugar of `observe.default`. See 'properties' for details
 
-**`ob.watch(target, expression, callback)`**
+**`observe.watch(target, expression, callback)`**
 
 - `target`: Any object
 - `expression`: `String` or `Function`
 - `callback`: `Function`
 - Returns `Watcher`. And calling `watcher.teardown()` could unwatch expression
 
-**`ob.compute(target, name, accessor, cache)`**
+**`observe.compute(target, name, accessor, cache)`**
 
 - `target`: Any object
 - `name`: `String`
@@ -124,7 +124,7 @@ target.radius = 3
     - `cache`: `Boolean`. Optional. The default is `true`. If `false`, the `get` will be evaluated whenever reading computed properties
 - `cache`: `Boolean`. Same as `accessor.cache`
 
-**`ob.react(options, target)`**
+**`observe.react(options, target)`**
 
 - `options`: `Object`. Contains:
   - `data`: It's the properties to add

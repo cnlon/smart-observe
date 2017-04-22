@@ -1,7 +1,7 @@
-import ob from 'ob.js'
+import observe from 'smart-observe'
 
 window.onload = function () {
-  const target = window.d = ob.react({
+  const target = window.d = observe.react({
     data: {
       PI: Math.PI,
       radius: 2,

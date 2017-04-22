@@ -1,5 +1,5 @@
 import {defineValue} from './util'
-import {OB_NAME} from './constants'
+import {OBSERVE_NAME} from './constants'
 
 const arrayPrototype = Array.prototype
 const arrayMethods = Object.create(arrayPrototype)
@@ -36,7 +36,7 @@ for (
   const original = arrayPrototype[method]
   defineValue(arrayMethods, method, function mutator (...args) {
     const result = original.apply(this, args)
-    const ob = this[OB_NAME]
+    const observer = this[OBSERVE_NAME]
     let inserted
     switch (method) {
       case 'push':
@@ -49,8 +49,8 @@ for (
         inserted = args.slice(2)
         break
     }
-    if (inserted) ob.observeArray(inserted)
-    ob.dep.notify() // notify change
+    if (inserted) observer.observeArray(inserted)
+    observer.dep.notify() // notify change
     return result
   })
 }
