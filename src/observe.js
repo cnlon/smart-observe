@@ -6,7 +6,7 @@ import {
   isArray,
   isPlainObject,
   every,
-} from './utils'
+} from './util'
 import {OB_NAME} from './constants'
 
 /**

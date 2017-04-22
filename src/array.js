@@ -1,4 +1,4 @@
-import {def} from './utils'
+import {def} from './util'
 import {OB_NAME} from './constants'
 
 const arrayPrototype = Array.prototype

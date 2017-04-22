@@ -12,7 +12,7 @@ import {
   noop,
   isFunction,
   every,
-} from './utils'
+} from './util'
 import {
   WATCHERS_PROPERTY_NAME,
   DATA_PROPTERTY_NAME,

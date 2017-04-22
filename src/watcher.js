@@ -7,7 +7,7 @@ import {
   isObject,
   isFunction,
   _Set as Set,
-} from './utils'
+} from './util'
 import {WATCHERS_PROPERTY_NAME} from './constants'
 
 let uid = 0

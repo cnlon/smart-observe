@@ -1,4 +1,4 @@
-import {warn} from './utils'
+import {warn} from './util'
 
 /**
  * Build a getter function. Requires eval.
