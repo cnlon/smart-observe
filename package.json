@@ -1,6 +1,6 @@
 {
   "name": "smart-observe",
-  "version": "0.2.5",
+  "version": "1.0.0",
   "description": "smart-observe comes from vue.js and is used to observe/watch Object/Array/Class",
   "main": "dist/smart-observe.js",
   "scripts": {
