@@ -4,11 +4,11 @@
   "description": "smart-observe comes from vue.js and is used to observe/watch Object/Array/Class",
   "main": "dist/smart-observe.js",
   "scripts": {
-    "test": "$(npm bin)/mocha",
-    "lint": "$(npm bin)/eslint src",
+    "test": "mocha",
+    "lint": "eslint src",
     "clean": "rm -rf dist/",
-    "rollup": "$(npm bin)/rollup --config --environment NODE_ENV:production --sourcemap",
-    "dev": "$(npm bin)/webpack-dev-server --config dev/webpack.config.js --content-base dev/ --inline --hot --port 3031",
+    "rollup": "rollup --config --environment NODE_ENV:production --sourcemap",
+    "dev": "webpack-dev-server --config dev/webpack.config.js --content-base dev/ --inline --hot --port 3031",
     "prebuild": "npm run lint && npm run clean",
     "build": "npm run rollup && MIN=min npm run rollup",
     "postbuild": "npm run test"
