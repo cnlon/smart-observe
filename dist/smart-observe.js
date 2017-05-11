@@ -898,11 +898,15 @@ function makeComputed(owner, getter) {
   };
 }
 
-// Only could be react, compute or watch
-observe$$1.default = watch$$1;
-observe$$1.deep = observe$$1.lazy = observe$$1.sync = false;
-
-Object.setPrototypeOf(observe$$1, { react: react, compute: compute, watch: watch$$1 });
+Object.defineProperties(observe$$1, {
+  'react': { value: react },
+  'compute': { value: compute },
+  'watch': { value: watch$$1 },
+  'default': { value: watch$$1, writable: true }, // Only could be react, compute or watch
+  'deep': { value: false, writable: true },
+  'lazy': { value: false, writable: true },
+  'sync': { value: false, writable: true }
+});
 
 /**
  * observe
@@ -925,7 +929,6 @@ function observe$$1(target, expression, func, options) {
 /**
  * React options
  *
- * @public
  * @param {Object} options
  * @param {Object} [target]
  * @return {Function} observe
@@ -950,7 +953,6 @@ function react(options, target) {
 /**
  * Compute property
  *
- * @public
  * @param {Object} target
  * @param {String} name
  * @param {Function|Object} getterOrAccessor
@@ -981,7 +983,6 @@ function compute(target, name, getterOrAccessor, cache) {
 /**
  * Watch property
  *
- * @public
  * @param {Object} target
  * @param {String|Function} expressionOrFunction
  * @param {Function} callback
@@ -1002,7 +1003,6 @@ function watch$$1(target, expressionOrFunction, callback) {
 }
 
 /**
- * @private
  * @param {Object} target
  */
 
@@ -1014,7 +1014,6 @@ function init(target) {
 }
 
 /**
- * @private
  * @param {Object} target
  * @param {Object} methods
  */
@@ -1026,7 +1025,6 @@ function carryMethods(target, methods) {
 }
 
 /**
- * @private
  * @param {Object} target
  * @param {String} key
  * @param {*} value
@@ -1039,7 +1037,6 @@ function reactProperty(target, key, value) {
 }
 
 /**
- * @private
  * @param {Object} target
  * @param {Object} properties
  */
@@ -1051,7 +1048,6 @@ function reactProperties(target, properties) {
 }
 
 /**
- * @private
  * @param {Object} target
  */
 
@@ -1062,7 +1058,6 @@ function reactSelfProperties(target) {
 }
 
 /**
- * @private
  * @param {Object} target
  * @param {Object} properties
  */
@@ -1074,7 +1069,6 @@ function computeProperties(target, properties) {
 }
 
 /**
- * @private
  * @param {Object} target
  * @param {Object} properties
  */
@@ -1090,7 +1084,6 @@ function watchProperties(target, properties) {
 }
 
 /**
- * @private
  * @param {Object} target
  * @param {String} key
  */
