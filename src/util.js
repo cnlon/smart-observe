@@ -106,7 +106,7 @@ export function noop () {}
  * @param {String} string
  */
 
-export const warn = typeof DEBUGGING !== undefined && DEBUGGING
+export const warn = typeof DEBUGGING !== 'undefined' && DEBUGGING
   && typeof console !== 'undefined' && console
   && isFunction(console.warn)
     ? console.warn
