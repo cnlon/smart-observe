@@ -232,7 +232,7 @@ function noop() {}
  * @param {String} string
  */
 
-var warn = (typeof DEBUGGING === 'undefined' ? 'undefined' : _typeof(DEBUGGING)) !== undefined && DEBUGGING && typeof console !== 'undefined' && console && isFunction(console.warn) ? console.warn : noop;
+var warn = typeof DEBUGGING !== 'undefined' && DEBUGGING && typeof console !== 'undefined' && console && isFunction(console.warn) ? console.warn : noop;
 
 var _Set = void 0;
 if (typeof Set !== 'undefined' && Set.toString().match(/native code/)) {
@@ -920,9 +920,7 @@ Object.defineProperties(observe$$1, {
  */
 
 function observe$$1(target, expression, func, options) {
-  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
-    init(target);
-  }
+  ensure(target);
   return observe$$1.default(target, expression, func, options);
 }
 
@@ -936,9 +934,7 @@ function observe$$1(target, expression, func, options) {
 
 function react(options, target) {
   if (target) {
-    if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
-      init(target);
-    }
+    ensure(target);
   } else {
     target = {};
     init(target);
@@ -965,9 +961,7 @@ function react(options, target) {
  */
 
 function compute(target, name, getterOrAccessor, cache) {
-  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
-    init(target);
-  }
+  ensure(target);
   var getter = void 0,
       setter = void 0;
   if (isFunction(getterOrAccessor)) {
@@ -996,9 +990,7 @@ function compute(target, name, getterOrAccessor, cache) {
 function watch$$1(target, expressionOrFunction, callback) {
   var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : observe$$1;
 
-  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
-    init(target);
-  }
+  ensure(target);
   return watch$1(target, expressionOrFunction, callback, options);
 }
 
@@ -1011,6 +1003,12 @@ function init(target) {
   defineValue(target, DATA_PROPTERTY_NAME, Object.create(null), false);
   observe$1(target[DATA_PROPTERTY_NAME]);
   reactSelfProperties(target);
+}
+
+function ensure(target) {
+  if (!Object.prototype.hasOwnProperty.call(target, WATCHERS_PROPERTY_NAME)) {
+    init(target);
+  }
 }
 
 /**

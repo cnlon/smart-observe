@@ -1,6 +1,6 @@
 {
   "name": "smart-observe",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "smart-observe comes from Vue.js and is a small, efficient library for observing changes of javascript Object, Array and Class.",
   "main": "dist/smart-observe.js",
   "scripts": {
