@@ -40,9 +40,7 @@ Object.defineProperties(observe, {
  */
 
 export default function observe (target, expression, func, options) {
-  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
-    init(target)
-  }
+  ensure(target)
   return observe.default(target, expression, func, options)
 }
 
@@ -56,9 +54,7 @@ export default function observe (target, expression, func, options) {
 
 function react (options, target) {
   if (target) {
-    if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
-      init(target)
-    }
+    ensure(target)
   } else {
     target = {}
     init(target)
@@ -85,9 +81,7 @@ function react (options, target) {
  */
 
 function compute (target, name, getterOrAccessor, cache) {
-  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
-    init(target)
-  }
+  ensure(target)
   let getter, setter
   if (isFunction(getterOrAccessor)) {
     getter = cache !== false
@@ -119,9 +113,7 @@ function compute (target, name, getterOrAccessor, cache) {
  */
 
 function watch (target, expressionOrFunction, callback, options = observe) {
-  if (!target.hasOwnProperty(WATCHERS_PROPERTY_NAME)) {
-    init(target)
-  }
+  ensure(target)
   return doWatch(target, expressionOrFunction, callback, options)
 }
 
@@ -134,6 +126,12 @@ function init (target) {
   defineValue(target, DATA_PROPTERTY_NAME, Object.create(null), false)
   doObserve(target[DATA_PROPTERTY_NAME])
   reactSelfProperties(target)
+}
+
+function ensure (target) {
+  if (!Object.prototype.hasOwnProperty.call(target, WATCHERS_PROPERTY_NAME)) {
+    init(target)
+  }
 }
 
 /**
