@@ -7,7 +7,7 @@ English | [中文](https://github.com/cnlon/smart-observe/blob/master/README.zh.
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 
-**smart-observe** comes from [**Vue.js**](https://github.com/vuejs/vue). It's a small, efficient library for observing changes of javascript Object, Array and Class.
+**smart-observe** comes from [**Vue.js**](https://github.com/vuejs/vue) and is a small, efficient library for observing changes of javascript Object, Array and Class.
 
 ## Installation
 

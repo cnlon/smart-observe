@@ -1,6 +1,6 @@
 {
   "name": "smart-observe",
-  "description": "smart-observe comes from vue.js and is used to observe/watch Object/Array/Class",
+  "description": "smart-observe comes from Vue.js and is a small, efficient library for observing changes of javascript Object, Array and Class.",
   "main": "dist/smart-observe.js",
   "keywords": [
     "observe",
