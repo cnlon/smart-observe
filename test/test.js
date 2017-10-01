@@ -1,3 +1,5 @@
+'use strict';
+
 const assert = require('chai').assert
 const observe = require('../dist/smart-observe.js')
 
