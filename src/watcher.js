@@ -19,12 +19,12 @@ class Watcher {
    * and fires callback when the expression value changes.
    *
    * @param {Object} owner
-   * @param {String|Function} getter
-   * @param {Function} callback
+   * @param {string|function} getter
+   * @param {function} callback
    * @param {Object} options
-   *                 - {Boolean} deep
-   *                 - {Boolean} sync
-   *                 - {Boolean} lazy
+   *                 - {boolean} deep
+   *                 - {boolean} sync
+   *                 - {boolean} lazy
    * @constructor
    */
 
@@ -186,8 +186,8 @@ class Watcher {
 }
 
 /**
- * Recrusively traverse an object to evoke all converted
- * getters, so that every nested property inside the object
+ * Recrusively traverse an Object to evoke all converted
+ * getters, so that every nested property inside the Object
  * is collected as a "deep" dependency.
  *
  * @param {*} value
@@ -209,12 +209,12 @@ function traverse (value) {
  * Create an watcher instance, returns the new watcher.
  *
  * @param {Object} owner
- * @param {String|Function} expressionOrFunction
- * @param {Function} callback
+ * @param {string|function} expressionOrFunction
+ * @param {function} callback
  * @param {Object} options
- *                 - {Boolean} deep
- *                 - {Boolean} sync
- *                 - {Boolean} lazy
+ *                 - {boolean} deep
+ *                 - {boolean} sync
+ *                 - {boolean} lazy
  * @return {Watcher}
  */
 
@@ -230,7 +230,7 @@ export function watch (owner, expressionOrFunction, callback, options) {
  * Make a computed getter, which can collect dependencies.
  *
  * @param {Object} owner
- * @param {Function} getter
+ * @param {function} getter
  */
 
 export function makeComputed (owner, getter) {

@@ -95,9 +95,9 @@ target.radius = 3
 
 | name | type | value | detail |
 | --- | --- | --- | --- |
-| `observe.deep` | `Boolean` | The default is `false` | If `true`, `observe.watch(target, expression, callback)` will observe `target` deeply |
-| `observe.sync` | `Boolean` | The default is `false` | If `true`, `observe.watch(target, expression, callback)` will invoke callback immediately when a property change is detected |
-| `observe.default` | `Function` | Could only be one of `observe.react`, `observe.watch` and `observe.compute`. The default is `observe.watch` | Set actual method to `observe.default` for `observe(...)` |
+| `observe.deep` | `boolean` | The default is `false` | If `true`, `observe.watch(target, expression, callback)` will observe `target` deeply |
+| `observe.sync` | `boolean` | The default is `false` | If `true`, `observe.watch(target, expression, callback)` will invoke callback immediately when a property change is detected |
+| `observe.default` | `function` | Could only be one of `observe.react`, `observe.watch` and `observe.compute`. The default is `observe.watch` | Set actual method to `observe.default` for `observe(...)` |
 
 #### methods
 
@@ -108,21 +108,21 @@ target.radius = 3
 **`observe.watch(target, expression, callback)`**
 
 - `target`: Any object
-- `expression`: `String` or `Function`
-- `callback`: `Function`
+- `expression`: `string` or `function`
+- `callback`: `function`
 - Returns `Watcher`. And calling `watcher.teardown()` could unwatch expression
 
 **`observe.compute(target, name, accessor, cache)`**
 
 - `target`: Any object
-- `name`: `String`
+- `name`: `string`
 - `accessor`:
-  - `Function`: It will be the `get` of accessor
+  - `function`: It will be the `get` of accessor
   - `Object`: Contains: (at least `get` or `set`)
-    - `get`: `Function`
-    - `set`: `Function`
-    - `cache`: `Boolean`. Optional. The default is `true`. If `false`, the `get` will be evaluated whenever reading computed properties
-- `cache`: `Boolean`. Same as `accessor.cache`
+    - `get`: `function`
+    - `set`: `function`
+    - `cache`: `boolean`. Optional. The default is `true`. If `false`, the `get` will be evaluated whenever reading computed properties
+- `cache`: `boolean`. Same as `accessor.cache`
 
 **`observe.react(options, target)`**
 

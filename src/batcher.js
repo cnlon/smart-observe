@@ -48,8 +48,8 @@ function runBatcherQueue (queue) {
  *
  * @param {Watcher} watcher
  *   properties:
- *   - {Number} id
- *   - {Function} run
+ *   - {number} id
+ *   - {function} run
  */
 
 export default function batch (watcher) {

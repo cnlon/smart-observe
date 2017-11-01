@@ -36,7 +36,7 @@ Object.defineProperties(observe, {
  * @param {*} [expression]
  * @param {*} [func]
  * @param {*} [options]
- * @return {Function} observe
+ * @return {function} observe
  */
 
 export default function observe (target, expression, func, options) {
@@ -49,7 +49,7 @@ export default function observe (target, expression, func, options) {
  *
  * @param {Object} options
  * @param {Object} [target]
- * @return {Function} observe
+ * @return {function} observe
  */
 
 function react (options, target) {
@@ -70,14 +70,14 @@ function react (options, target) {
  * Compute property
  *
  * @param {Object} target
- * @param {String} name
- * @param {Function|Object} getterOrAccessor
- *        - Function getter
+ * @param {string} name
+ * @param {function|Object} getterOrAccessor
+ *        - function getter
  *        - Object accessor
- *          - Function [get]  - getter
- *          - Function [set]  - setter
- *          - Boolean [cache]
- * @param {Boolean} [cache]
+ *          - function [get]  - getter
+ *          - function [set]  - setter
+ *          - boolean [cache]
+ * @param {boolean} [cache]
  */
 
 function compute (target, name, getterOrAccessor, cache) {
@@ -103,12 +103,12 @@ function compute (target, name, getterOrAccessor, cache) {
  * Watch property
  *
  * @param {Object} target
- * @param {String|Function} expressionOrFunction
- * @param {Function} callback
+ * @param {string|function} expressionOrFunction
+ * @param {function} callback
  * @param {Object} [options]
- *                 - {Boolean} deep
- *                 - {Boolean} sync
- *                 - {Boolean} lazy
+ *                 - {boolean} deep
+ *                 - {boolean} sync
+ *                 - {boolean} lazy
  * @return {Watcher}
  */
 
@@ -147,7 +147,7 @@ function carryMethods (target, methods) {
 
 /**
  * @param {Object} target
- * @param {String} key
+ * @param {string} key
  * @param {*} value
  */
 
@@ -202,7 +202,7 @@ function watchProperties (target, properties) {
 
 /**
  * @param {Object} target
- * @param {String} key
+ * @param {string} key
  */
 
 function proxy (target, key) {

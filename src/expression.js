@@ -6,8 +6,8 @@ import {warn} from './util'
  * We isolate the try/catch so it doesn't affect the
  * optimization of the parse function when it is not called.
  *
- * @param {String} body
- * @return {Function|undefined}
+ * @param {string} body
+ * @return {function|undefined}
  */
 
 function makeGetterFunction (body) {
@@ -23,8 +23,8 @@ function makeGetterFunction (body) {
 /**
  * Parse an expression to getter.
  *
- * @param {String} expression
- * @return {Function|undefined}
+ * @param {string} expression
+ * @return {function|undefined}
  */
 
 export default function parse (expression) {

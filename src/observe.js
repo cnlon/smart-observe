@@ -60,7 +60,7 @@ class Observer {
    * Convert a property into getter/setter so we can emit
    * the events when the property is accessed/changed.
    *
-   * @param {String} key
+   * @param {string} key
    * @param {*} value
    */
 
@@ -99,7 +99,7 @@ export function observe (value) {
  * Define a reactive property on an Object.
  *
  * @param {Object} object
- * @param {String} key
+ * @param {string} key
  * @param {*} value
  */
 

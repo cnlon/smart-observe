@@ -4,9 +4,9 @@ import {DEBUGGING} from './constants'
  * Define property with value.
  *
  * @param {Object} object
- * @param {String} property
+ * @param {string} property
  * @param {*} value
- * @param {Boolean} [enumerable]
+ * @param {boolean} [enumerable]
  */
 
 export function defineValue (object, property, value, enumerable) {
@@ -22,9 +22,9 @@ export function defineValue (object, property, value, enumerable) {
  * Define property with getter and setter.
  *
  * @param {Object} object
- * @param {String} property
- * @param {Function} getter
- * @param {Function} setter
+ * @param {string} property
+ * @param {function} getter
+ * @param {function} setter
  */
 
 export function defineAccessor (object, property, getter, setter) {
@@ -39,7 +39,7 @@ export function defineAccessor (object, property, getter, setter) {
 /**
  * Array type check.
  *
- * @return {Boolean}
+ * @return {boolean}
  */
 
 export const isArray = Array.isArray
@@ -48,8 +48,8 @@ export const isArray = Array.isArray
  * Strict object type check. Only returns true
  * for plain JavaScript objects.
  *
- * @param {*} object
- * @return {Boolean}
+ * @param {*} Object
+ * @return {boolean}
  */
 
 const toString = Object.prototype.toString
@@ -64,7 +64,7 @@ export function isPlainObject (object) {
  * is a JSON-compliant type.
  *
  * @param {*} object
- * @return {Boolean}
+ * @return {boolean}
  */
 
 export function isObject (object) {
@@ -75,7 +75,7 @@ export function isObject (object) {
  * Function type check
  *
  * @param {*} func
- * @param {Boolean}
+ * @param {boolean}
  */
 
 export function isFunction (func) {
@@ -86,7 +86,7 @@ export function isFunction (func) {
  * Iterate object
  *
  * @param {Object} object
- * @param {Function} callback
+ * @param {function} callback
  */
 
 export function everyEntries (object, callback) {
@@ -103,7 +103,7 @@ export function everyEntries (object, callback) {
 export function noop () {}
 
 /**
- * @param {String} string
+ * @param {string} string
  */
 
 export const warn = typeof DEBUGGING !== 'undefined' && DEBUGGING

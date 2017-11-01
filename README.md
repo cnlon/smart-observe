@@ -94,9 +94,9 @@ target.radius = 3
 
 | 名称 | 类型 | 值 | 说明 |
 | --- | --- | --- | --- |
-| `observe.deep` | `Boolean` | 默认为 `false` | 如果为 `true`，`observe.watch(target, expression, callback)` 将会对 `target` 深度监测 |
-| `observe.sync` | `Boolean` | 默认为 `false` | 如果为 `true`，`observe.watch(target, expression, callback)` 监测到属性变化时，立即调用回调函数 |
-| `observe.default` | `Function` | 只能为 `observe.react`，`observe.watch` 或 `observe.compute`， 默认为 `observe.watch` | 设置 `observe(...)` 实际调用的方法，写起来简洁一些 |
+| `observe.deep` | `boolean` | 默认为 `false` | 如果为 `true`，`observe.watch(target, expression, callback)` 将会对 `target` 深度监测 |
+| `observe.sync` | `boolean` | 默认为 `false` | 如果为 `true`，`observe.watch(target, expression, callback)` 监测到属性变化时，立即调用回调函数 |
+| `observe.default` | `function` | 只能为 `observe.react`，`observe.watch` 或 `observe.compute`， 默认为 `observe.watch` | 设置 `observe(...)` 实际调用的方法，写起来简洁一些 |
 
 #### 方法
 
@@ -107,21 +107,21 @@ target.radius = 3
 **`observe.watch(target, expression, callback)`**
 
 - `target`: 任意对象
-- `expression`: `String` 或 `Function`
-- `callback`: `Function`
+- `expression`: `string` 或 `function`
+- `callback`: `function`
 - 返回 `Watcher`，调用 `watcher.teardown()` 可以取消监测
 
 **`observe.compute(target, name, accessor, cache)`**
 
 - `target`: 任意对象
-- `name`: `String`
+- `name`: `string`
 - `accessor`:
-  - `Function`: 会作为 `getter`，等同传入 {get: accessor}
+  - `function`: 会作为 `getter`，等同传入 {get: accessor}
   - `Object`: 可以包含：(其中，至少包含 `get` 或 `set`)
-    - `get`: `Function`
-    - `set`: `Function`
-    - `cache`: `Boolean`，可选，默认为 `true`，如果设为 `false`，每次读取计算属性都要重新计算
-- `cache`: `Boolean`，可选，默认为 `true`，仅当 `accessor` 为 `Function` 时有效。
+    - `get`: `function`
+    - `set`: `function`
+    - `cache`: `boolean`，可选，默认为 `true`，如果设为 `false`，每次读取计算属性都要重新计算
+- `cache`: `boolean`，可选，默认为 `true`，仅当 `accessor` 为 `function` 时有效。
 
 **`observe.react(options, target)`**
 

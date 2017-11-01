@@ -56,7 +56,7 @@ for (let i = 0, l = arrayMutativeMethods.length; i < l; i++) {
  * Swap the element at the given index with a new value
  * and emits corresponding event.
  *
- * @param {Number} index
+ * @param {number} index
  * @param {*} value
  * @return {*} - replaced element
  */
