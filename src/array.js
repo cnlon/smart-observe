@@ -27,11 +27,8 @@ export default function amend (array) {
  * Intercept mutating methods and emit events
  */
 
-for (
-  let i = 0, l = arrayMutativeMethods.length, method;
-  i < l;
-  method = arrayMutativeMethods[++i]
-) {
+for (let i = 0, l = arrayMutativeMethods.length; i < l; i++) {
+  const method = arrayMutativeMethods[i]
   // cache original method
   const original = arrayPrototype[method]
   defineValue(arrayMethods, method, function mutator (...args) {
