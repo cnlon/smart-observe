@@ -8,7 +8,7 @@ const equal = assert.equal
 /* global describe, it */
 describe('smart-observe', function () {
   describe('#watch()', function () {
-    const target = {a: 1}
+    const target = {a: 1, b: []}
     it('target.a\'s old value should equal 1, new value should equal 3, "this" should bound to target', done => {
       observe(target, 'a', function (newValue, oldValue) {
         equal(newValue, 3)
@@ -17,6 +17,14 @@ describe('smart-observe', function () {
         done()
       })
       target.a = 3
+    })
+    it('target.b\'s  new value should equal [1], "this" should bound to target', done => {
+      observe(target, 'b', function (newValue) {
+        equal(JSON.stringify(newValue), '[1]')
+        equal(newValue, this.b)
+        done()
+      })
+      target.b.push(1)
     })
   })
   describe('#compute()', function () {
