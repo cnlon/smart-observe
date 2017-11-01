@@ -13,7 +13,6 @@ import {WATCHERS_PROPERTY_NAME} from './constants'
 let uid = 0
 
 class Watcher {
-
   /**
    * A watcher parses an expression, collects dependencies,
    * and fires callback when the expression value changes.
@@ -221,8 +220,8 @@ function traverse (value) {
 export function watch (owner, expressionOrFunction, callback, options) {
   // parse expression for getter
   const getter = isFunction(expressionOrFunction)
-               ? expressionOrFunction
-               : parseExpression(expressionOrFunction)
+    ? expressionOrFunction
+    : parseExpression(expressionOrFunction)
   return new Watcher(owner, getter, callback, options)
 }
 

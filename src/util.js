@@ -106,11 +106,13 @@ export function noop () {}
  * @param {string} string
  */
 
-export const warn = typeof DEBUGGING !== 'undefined' && DEBUGGING
-  && typeof console !== 'undefined' && console
+export const warn = typeof DEBUGGING !== 'undefined'
+  && DEBUGGING
+  && typeof console !== 'undefined'
+  && console
   && isFunction(console.warn)
-    ? console.warn
-    : noop
+  ? console.warn
+  : noop
 
 export let _Set
 if (typeof Set !== 'undefined' && Set.toString().match(/native code/)) {

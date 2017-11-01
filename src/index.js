@@ -85,15 +85,15 @@ function compute (target, name, getterOrAccessor, cache) {
   let getter, setter
   if (isFunction(getterOrAccessor)) {
     getter = cache !== false
-            ? makeComputed(target, getterOrAccessor)
-            : getterOrAccessor.bind(this)
+      ? makeComputed(target, getterOrAccessor)
+      : getterOrAccessor.bind(this)
     setter = noop
   } else {
     getter = getterOrAccessor.get
-            ? getterOrAccessor.cache !== false || cache !== false
-              ? makeComputed(target, getterOrAccessor.get)
-              : getterOrAccessor.get.bind(this)
-            : noop
+      ? getterOrAccessor.cache !== false || cache !== false
+        ? makeComputed(target, getterOrAccessor.get)
+        : getterOrAccessor.get.bind(this)
+      : noop
     setter = getterOrAccessor.set ? getterOrAccessor.set.bind(this) : noop
   }
   defineAccessor(target, name, getter, setter)
