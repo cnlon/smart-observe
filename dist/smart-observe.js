@@ -272,7 +272,8 @@ function amend(array) {
  * Intercept mutating methods and emit events
  */
 
-var _loop = function _loop(i, l, method) {
+var _loop = function _loop(i, l) {
+  var method = arrayMutativeMethods[i];
   // cache original method
   var original = arrayPrototype[method];
   defineValue(arrayMethods, method, function mutator() {
@@ -300,8 +301,8 @@ var _loop = function _loop(i, l, method) {
   });
 };
 
-for (var i = 0, l = arrayMutativeMethods.length, method; i < l; method = arrayMutativeMethods[++i]) {
-  _loop(i, l, method);
+for (var i = 0, l = arrayMutativeMethods.length; i < l; i++) {
+  _loop(i, l);
 }
 
 /**
